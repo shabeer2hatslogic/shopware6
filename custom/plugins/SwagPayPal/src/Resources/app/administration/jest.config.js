@@ -10,12 +10,8 @@ module.exports = {
         adminPath: process.env.ADMIN_PATH,
     },
 
-    testMatch: [
-        '<rootDir>/**/*.spec.js',
-    ],
-
     setupFilesAfterEnv: [
-        resolve(join(process.env.ADMIN_PATH, '/test/_setup/prepare_environment.js')),
+        resolve(join(__dirname, '/test/prepare_environment.js')),
         '<rootDir>/jest.setup.js',
     ],
 
@@ -37,14 +33,11 @@ module.exports = {
 
     moduleNameMapper: {
         '^SwagPayPal(.*)$': '<rootDir>/src$1',
-        '^src(.*)$': `${process.env.ADMIN_PATH}/src$1`,
-        '^\@shopware-ag\/meteor-admin-sdk\/es\/(.*)':
-            `${process.env.ADMIN_PATH}/node_modules/@shopware-ag/meteor-admin-sdk/umd/$1`,
-        'vue$': `${process.env.ADMIN_PATH}/node_modules/@vue/compat/dist/vue.cjs.js`,
-        '^@vue\/test-utils$': `${process.env.ADMIN_PATH}/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js`,
-    },
-
-    testEnvironmentOptions: {
-        customExportConditions: ['node', 'node-addons'],
+        // Force module uuid to resolve with the CJS entry point, because Jest does not support package.json.exports.
+        // See https://github.com/uuidjs/uuid/issues/451
+        '^uuid$': require.resolve('uuid'),
+        '^\@shopware-ag\/admin-extension-sdk\/es\/(.*)':
+            `${process.env.ADMIN_PATH}/node_modules/@shopware-ag/admin-extension-sdk/umd/$1`,
+        vue$: 'vue/dist/vue.common.dev.js',
     },
 };

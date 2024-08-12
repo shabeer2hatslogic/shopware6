@@ -43,7 +43,7 @@ class TurnoverReportingTaskHandler extends ScheduledTaskHandler
         private readonly ?string $instanceId,
     ) {
         $this->client = new Client(['base_uri' => 'https://api.shopware.com']);
-        parent::__construct($scheduledTaskRepository, $logger);
+        parent::__construct($scheduledTaskRepository);
     }
 
     public function run(): void

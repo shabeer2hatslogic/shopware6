@@ -108,7 +108,8 @@
             <tag name="shopware.payment.method.sync"/>
         </service>
 
-        <service id="Swag\PayPal\Checkout\Payment\Method\VenmoHandler" parent="Swag\PayPal\Checkout\Payment\Method\AbstractSyncAPMHandler">
+        <service id="Swag\PayPal\Checkout\Payment\Method\VenmoHandler"
+                 parent="Swag\PayPal\Checkout\Payment\Method\AbstractSyncAPMHandler">
             <argument type="service" id="Swag\PayPal\OrdersApi\Builder\VenmoOrderBuilder"/>
             <argument type="service" id="Shopware\Core\Checkout\Cart\Order\OrderConverter"/>
 

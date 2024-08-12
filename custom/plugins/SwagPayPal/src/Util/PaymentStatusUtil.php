@@ -12,7 +12,8 @@ use Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionStat
 use Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionStates;
 use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Checkout\Order\OrderException;
-use Shopware\Core\Checkout\Payment\PaymentException;
+use Shopware\Core\Checkout\Payment\Exception\InvalidOrderException;
+use Shopware\Core\Checkout\Payment\Exception\InvalidTransactionException;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -59,7 +60,7 @@ class PaymentStatusUtil
         $transactionId = $transaction->getId();
         $stateMachineState = $transaction->getStateMachineState();
         if ($stateMachineState === null) {
-            throw PaymentException::invalidTransaction($transactionId);
+            throw new InvalidTransactionException($transactionId);
         }
 
         if ($captureResponse->isIsFinalCapture()) {
@@ -158,7 +159,7 @@ class PaymentStatusUtil
         Context $context
     ): void {
         if ($stateMachineState === null) {
-            throw PaymentException::invalidTransaction($transactionId);
+            throw new InvalidTransactionException($transactionId);
         }
 
         // TODO PPI-59 - Do transition even if transaction is already partially refunded.
@@ -173,9 +174,8 @@ class PaymentStatusUtil
     private function getOrderTransaction(string $orderId, Context $context): OrderTransactionEntity
     {
         $criteria = new Criteria([$orderId]);
-        $criteria->addAssociation('transactions.stateMachineState');
+        $criteria->addAssociation('transactions');
         $criteria->getAssociation('transactions')->addSorting(new FieldSorting('createdAt'));
-
         /** @var OrderEntity|null $order */
         $order = $this->orderRepository->search($criteria, $context)->first();
 
@@ -186,13 +186,13 @@ class PaymentStatusUtil
         $transactionCollection = $order->getTransactions();
 
         if ($transactionCollection === null) {
-            throw PaymentException::invalidOrder($orderId);
+            throw new InvalidOrderException($orderId);
         }
 
         $transaction = $transactionCollection->last();
 
         if ($transaction === null) {
-            throw PaymentException::invalidOrder($orderId);
+            throw new InvalidOrderException($orderId);
         }
 
         return $transaction;

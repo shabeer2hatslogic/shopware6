@@ -11,6 +11,9 @@ use Psr\Log\LoggerInterface;
 use Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionStateHandler;
 use Shopware\Core\Checkout\Payment\Cart\AsyncPaymentTransactionStruct;
 use Shopware\Core\Checkout\Payment\Cart\PaymentHandler\AsynchronousPaymentHandlerInterface;
+use Shopware\Core\Checkout\Payment\Exception\AsyncPaymentProcessException;
+use Shopware\Core\Checkout\Payment\Exception\CustomerCanceledAsyncPaymentException;
+use Shopware\Core\Checkout\Payment\Exception\InvalidTransactionException;
 use Shopware\Core\Checkout\Payment\PaymentException;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\Log\Package;
@@ -74,7 +77,7 @@ class APMHandler extends AbstractPaymentMethodHandler implements AsynchronousPay
         try {
             $this->settingsValidationService->validate($salesChannelContext->getSalesChannelId());
         } catch (PayPalSettingsInvalidException $exception) {
-            throw PaymentException::asyncProcessInterrupted($transactionId, $exception->getMessage());
+            throw new AsyncPaymentProcessException($transactionId, $exception->getMessage());
         }
 
         $this->orderTransactionStateHandler->processUnconfirmed($transactionId, $salesChannelContext->getContext());
@@ -104,7 +107,7 @@ class APMHandler extends AbstractPaymentMethodHandler implements AsynchronousPay
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
 
-            throw PaymentException::asyncProcessInterrupted(
+            throw new AsyncPaymentProcessException(
                 $transactionId,
                 \sprintf('An error occurred during the communication with PayPal%s%s', \PHP_EOL, $e->getMessage())
             );
@@ -119,7 +122,7 @@ class APMHandler extends AbstractPaymentMethodHandler implements AsynchronousPay
 
         $link = $response->getLinks()->getRelation(Link::RELATION_PAYER_ACTION);
         if ($link === null) {
-            throw PaymentException::asyncProcessInterrupted($transactionId, 'No approve link provided by PayPal');
+            throw new AsyncPaymentProcessException($transactionId, 'No approve link provided by PayPal');
         }
 
         return new RedirectResponse($link->getHref());
@@ -130,13 +133,13 @@ class APMHandler extends AbstractPaymentMethodHandler implements AsynchronousPay
         $transactionId = $transaction->getOrderTransaction()->getId();
         $paypalOrderId = $transaction->getOrderTransaction()->getCustomFields()[SwagPayPal::ORDER_TRANSACTION_CUSTOM_FIELDS_PAYPAL_ORDER_ID] ?? null;
         if (!$paypalOrderId) {
-            throw PaymentException::invalidTransaction($transactionId);
+            throw new InvalidTransactionException($transactionId);
         }
 
         if ($request->query->getBoolean(PayPalPaymentHandler::PAYPAL_REQUEST_PARAMETER_CANCEL)) {
             $this->logger->debug('Customer canceled');
 
-            throw PaymentException::customerCanceled(
+            throw new CustomerCanceledAsyncPaymentException(
                 $transaction->getOrderTransaction()->getId(),
                 'Customer canceled the payment on the PayPal page'
             );
@@ -148,7 +151,7 @@ class APMHandler extends AbstractPaymentMethodHandler implements AsynchronousPay
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
 
-            throw PaymentException::asyncProcessInterrupted($transactionId, $e->getMessage());
+            throw new AsyncPaymentProcessException($transactionId, $e->getMessage());
         }
 
         try {

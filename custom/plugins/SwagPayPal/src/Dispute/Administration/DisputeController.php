@@ -10,10 +10,9 @@ namespace Swag\PayPal\Dispute\Administration;
 use OpenApi\Attributes as OA;
 use Shopware\Core\Framework\Api\Exception\InvalidSalesChannelIdException;
 use Shopware\Core\Framework\Log\Package;
+use Shopware\Core\Framework\Routing\Exception\InvalidRequestParameterException;
 use Shopware\Core\Framework\Routing\RoutingException;
 use Shopware\Core\Framework\Uuid\Uuid;
-use Swag\PayPal\Dispute\Exception\NotAuthorizedException;
-use Swag\PayPal\RestApi\Exception\PayPalApiException;
 use Swag\PayPal\RestApi\V1\Api\Disputes;
 use Swag\PayPal\RestApi\V1\Api\Disputes\Item;
 use Swag\PayPal\RestApi\V1\Resource\DisputeResource;
@@ -68,17 +67,9 @@ class DisputeController extends AbstractController
         $salesChannelId = $this->validateSalesChannelId($request);
         $disputeStateFilter = $this->validateDisputeStateFilter($request);
 
-        try {
-            $disputeList = $this->disputeResource->list($salesChannelId, $disputeStateFilter);
+        $disputeList = $this->disputeResource->list($salesChannelId, $disputeStateFilter);
 
-            return new JsonResponse($disputeList);
-        } catch (PayPalApiException $e) {
-            if ($e->getStatusCode() === Response::HTTP_UNAUTHORIZED) {
-                throw new NotAuthorizedException();
-            }
-
-            throw $e;
-        }
+        return new JsonResponse($disputeList);
     }
 
     #[OA\Get(
@@ -136,7 +127,7 @@ class DisputeController extends AbstractController
     }
 
     /**
-     * @throws RoutingException
+     * @throws InvalidRequestParameterException
      */
     private function validateDisputeStateFilter(Request $request): ?string
     {

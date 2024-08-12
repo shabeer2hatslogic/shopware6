@@ -124,35 +124,13 @@
             {% endblock %}
 
             {% block swag_paypal_disputes_list_content_empty_state %}
-                <sw-empty-state
-                    v-if="notAuthorized"
-                    :title="$tc('swag-paypal-disputes.list.emptyStateNotAuthorized.title')"
-                    icon="regular-exclamation-triangle"
-                    color="#F88962"
-                >
-                    <i18n-t
-                        tag="p"
-                        keypath="swag-paypal-disputes.list.emptyStateNotAuthorized.subline"
-                    >
-                        <template #link>
-                            <sw-internal-link
-                                :routerLink="{ name: 'sw.settings.payment.overview' }"
-                                :inline="true"
-                                :hideIcon="true"
-                            >
-                                {{ $tc('swag-paypal-disputes.list.emptyStateNotAuthorized.link') }}
-                            </sw-internal-link>
-                        </template>
-                    </i18n-t>
-                </sw-empty-state>
-
-                <sw-empty-state
-                    v-else-if="showEmptyStateWithNoDisputes"
-                    :title="$tc('swag-paypal-disputes.list.emptyState.title')"
-                    :subline="$tc('swag-paypal-disputes.list.emptyState.subline')"
-                    icon="regular-comments"
-                    color="#F88962"
-                />
+            <sw-empty-state
+                v-if="disputes.length === 0"
+                :title="$tc('swag-paypal-disputes.list.emptyState.title')"
+                :subline="$tc('swag-paypal-disputes.list.emptyState.subline')"
+                icon="regular-comments"
+                color="#F88962"
+            />
             {% endblock %}
 
         </template>
@@ -190,7 +168,11 @@
                         :label="$tc('swag-paypal-disputes.common.status')"
                         :options="disputeStates"
                         :value="disputeStateFilter"
+                        {% if VUE3 %}
                         @update:value="onChangeDisputeStateFilter"
+                        {% else %}
+                        @change="onChangeDisputeStateFilter"
+                        {% endif %}
                     />
                     {% endblock %}
                 {% endblock %}

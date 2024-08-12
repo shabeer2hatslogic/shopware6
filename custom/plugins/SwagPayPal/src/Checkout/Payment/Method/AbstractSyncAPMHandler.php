@@ -11,6 +11,7 @@ use Psr\Log\LoggerInterface;
 use Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionStateHandler;
 use Shopware\Core\Checkout\Payment\Cart\PaymentHandler\SynchronousPaymentHandlerInterface;
 use Shopware\Core\Checkout\Payment\Cart\SyncPaymentTransactionStruct;
+use Shopware\Core\Checkout\Payment\Exception\SyncPaymentProcessException;
 use Shopware\Core\Checkout\Payment\PaymentException;
 use Shopware\Core\Framework\Log\Package;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
@@ -51,7 +52,7 @@ abstract class AbstractSyncAPMHandler extends AbstractPaymentMethodHandler imple
         $customerId = $salesChannelContext->getCustomerId();
 
         if (!$paypalOrderId || !$customerId) {
-            throw PaymentException::syncProcessInterrupted($transactionId, 'Missing PayPal order id');
+            throw new SyncPaymentProcessException($transactionId, 'Missing PayPal order id');
         }
 
         try {
@@ -92,7 +93,7 @@ abstract class AbstractSyncAPMHandler extends AbstractPaymentMethodHandler imple
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
 
-            throw PaymentException::syncProcessInterrupted($transactionId, $e->getMessage());
+            throw new SyncPaymentProcessException($transactionId, $e->getMessage());
         }
     }
 

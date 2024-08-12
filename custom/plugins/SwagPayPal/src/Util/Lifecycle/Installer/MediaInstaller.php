@@ -7,7 +7,7 @@
 
 namespace Swag\PayPal\Util\Lifecycle\Installer;
 
-use Shopware\Core\Checkout\Payment\PaymentException;
+use Shopware\Core\Checkout\Payment\Exception\UnknownPaymentMethodException;
 use Shopware\Core\Checkout\Payment\PaymentMethodEntity;
 use Shopware\Core\Content\Media\File\FileSaver;
 use Shopware\Core\Content\Media\File\MediaFile;
@@ -62,7 +62,7 @@ class MediaInstaller
         /** @var PaymentMethodEntity|null $paymentMethod */
         $paymentMethod = $this->paymentMethodRepository->search($criteria, $context)->first();
         if ($paymentMethod === null) {
-            throw PaymentException::unknownPaymentMethodById($paymentMethodId);
+            throw new UnknownPaymentMethodException($paymentMethodId);
         }
 
         if (!$replace && $paymentMethod->getMediaId()) {

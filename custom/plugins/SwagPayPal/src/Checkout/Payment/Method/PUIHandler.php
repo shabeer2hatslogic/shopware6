@@ -12,6 +12,7 @@ use Shopware\Core\Checkout\Cart\CartException;
 use Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionStateHandler;
 use Shopware\Core\Checkout\Payment\Cart\PaymentHandler\SynchronousPaymentHandlerInterface;
 use Shopware\Core\Checkout\Payment\Cart\SyncPaymentTransactionStruct;
+use Shopware\Core\Checkout\Payment\Exception\SyncPaymentProcessException;
 use Shopware\Core\Checkout\Payment\PaymentException;
 use Shopware\Core\Framework\Log\Package;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
@@ -91,7 +92,7 @@ class PUIHandler extends AbstractPaymentMethodHandler implements SynchronousPaym
         $fraudnetSessionId = $dataBag->get(self::PUI_FRAUD_NET_SESSION_ID);
 
         if (!$fraudnetSessionId) {
-            throw PaymentException::syncProcessInterrupted($transactionId, 'Missing Fraudnet session id');
+            throw new SyncPaymentProcessException($transactionId, 'Missing Fraudnet session id');
         }
 
         $customer = $salesChannelContext->getCustomer();
@@ -132,7 +133,7 @@ class PUIHandler extends AbstractPaymentMethodHandler implements SynchronousPaym
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
 
-            throw PaymentException::syncProcessInterrupted($transactionId, $e->getMessage());
+            throw new SyncPaymentProcessException($transactionId, $e->getMessage());
         }
     }
 

@@ -21,8 +21,6 @@ use Swag\PayPal\Util\Availability\AvailabilityContext;
 #[Package('checkout')]
 class SEPAMethodData extends AbstractMethodData implements CheckoutDataMethodInterface
 {
-    public const TECHNICAL_NAME = 'swag_paypal_sepa';
-
     public const PAYPAL_SEPA_FIELD_DATA_EXTENSION_ID = 'payPalSEPAFieldData';
 
     /**
@@ -53,11 +51,6 @@ class SEPAMethodData extends AbstractMethodData implements CheckoutDataMethodInt
     public function getHandler(): string
     {
         return SEPAHandler::class;
-    }
-
-    public function getTechnicalName(): string
-    {
-        return self::TECHNICAL_NAME;
     }
 
     public function isAvailable(AvailabilityContext $availabilityContext): bool

@@ -25,8 +25,6 @@ use Swag\PayPal\Util\Availability\AvailabilityContext;
 #[Package('checkout')]
 class ACDCMethodData extends AbstractMethodData implements CheckoutDataMethodInterface
 {
-    public const TECHNICAL_NAME = 'swag_paypal_acdc';
-
     public const PAYPAL_ACDC_FIELD_DATA_EXTENSION_ID = 'payPalACDCFieldData';
 
     /**
@@ -54,11 +52,6 @@ class ACDCMethodData extends AbstractMethodData implements CheckoutDataMethodInt
     public function getHandler(): string
     {
         return ACDCHandler::class;
-    }
-
-    public function getTechnicalName(): string
-    {
-        return self::TECHNICAL_NAME;
     }
 
     public function isAvailable(AvailabilityContext $availabilityContext): bool

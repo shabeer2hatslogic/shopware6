@@ -3,6 +3,7 @@
 
 use Shopware\Core\Framework\Adapter\Kernel\KernelFactory;
 use Shopware\Core\Framework\Plugin\KernelPluginLoader\ComposerPluginLoader;
+use Shopware\Core\HttpKernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
 
@@ -38,12 +39,18 @@ return static function (array &$context) {
         $_SERVER['DATABASE_URL'] = 'mysql://_placeholder.test';
     }
 
-    $kernel = KernelFactory::create(
-        environment: $env,
-        debug: $debug,
-        classLoader: $classLoader,
-        pluginLoader: new ComposerPluginLoader($classLoader, null),
-    );
+    if (method_exists(KernelFactory::class, "create")) {
+        $kernel = KernelFactory::create(
+            environment: $env,
+            debug: $debug,
+            classLoader: $classLoader,
+            pluginLoader: new ComposerPluginLoader($classLoader, null)
+        );
+    } else {
+        $kernel = new HttpKernel($env, $debug, $classLoader);
+        $kernel->setPluginLoader(new ComposerPluginLoader($classLoader, null));
+        $kernel = $kernel->getKernel();
+    }
 
     $application = new Application($kernel);
     $kernel->boot();

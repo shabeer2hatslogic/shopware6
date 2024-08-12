@@ -47,7 +47,7 @@ class CartValidator implements CartValidatorInterface
         SettingsValidationServiceInterface $settingsValidationService,
         RequestStack $requestStack,
         ExcludedProductValidator $excludedProductValidator,
-        AvailabilityService $availabilityService
+        availabilityService $availabilityService
     ) {
         $this->cartPriceService = $cartPriceService;
         $this->methodDataRegistry = $methodDataRegistry;

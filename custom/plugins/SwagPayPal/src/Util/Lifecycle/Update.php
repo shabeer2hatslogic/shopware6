@@ -8,12 +8,10 @@
 namespace Swag\PayPal\Util\Lifecycle;
 
 use Shopware\Core\Checkout\Payment\PaymentException;
-use Shopware\Core\Checkout\Payment\PaymentMethodCollection;
 use Shopware\Core\Content\Category\Exception\CategoryNotFoundException;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
-use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsAnyFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\Log\Package;
 use Shopware\Core\Framework\Plugin\Context\UpdateContext;
@@ -42,7 +40,6 @@ use Swag\PayPal\Util\Lifecycle\Method\ApplePayMethodData;
 use Swag\PayPal\Util\Lifecycle\Method\GooglePayMethodData;
 use Swag\PayPal\Util\Lifecycle\Method\OxxoMethodData;
 use Swag\PayPal\Util\Lifecycle\Method\PayLaterMethodData;
-use Swag\PayPal\Util\Lifecycle\Method\PaymentMethodDataRegistry;
 use Swag\PayPal\Util\Lifecycle\Method\PUIMethodData;
 use Swag\PayPal\Util\Lifecycle\Method\TrustlyMethodData;
 use Swag\PayPal\Util\Lifecycle\Method\VenmoMethodData;
@@ -58,20 +55,52 @@ class Update
 {
     use PosSalesChannelTrait;
 
+    private SystemConfigService $systemConfig;
+
+    private EntityRepository $customFieldRepository;
+
+    private ?WebhookServiceInterface $webhookService;
+
+    private EntityRepository $paymentRepository;
+
+    private EntityRepository $salesChannelRepository;
+
+    private EntityRepository $salesChannelTypeRepository;
+
+    private ?InformationDefaultService $informationDefaultService;
+
+    private EntityRepository $shippingRepository;
+
+    private ?PosWebhookService $posWebhookService;
+
+    private PaymentMethodInstaller $paymentMethodInstaller;
+
+    private PaymentMethodStateService $paymentMethodStateService;
+
     public function __construct(
-        private readonly SystemConfigService $systemConfig,
-        private readonly EntityRepository $paymentRepository,
-        private readonly EntityRepository $customFieldRepository,
-        private readonly ?WebhookServiceInterface $webhookService,
-        private readonly EntityRepository $salesChannelRepository,
-        private readonly EntityRepository $salesChannelTypeRepository,
-        private readonly ?InformationDefaultService $informationDefaultService,
-        private readonly EntityRepository $shippingRepository,
-        private readonly ?PosWebhookService $posWebhookService,
-        private readonly PaymentMethodInstaller $paymentMethodInstaller,
-        private readonly PaymentMethodStateService $paymentMethodStateService,
-        private readonly PaymentMethodDataRegistry $paymentMethodDataRegistry,
+        SystemConfigService $systemConfig,
+        EntityRepository $paymentRepository,
+        EntityRepository $customFieldRepository,
+        ?WebhookServiceInterface $webhookService,
+        EntityRepository $salesChannelRepository,
+        EntityRepository $salesChannelTypeRepository,
+        ?InformationDefaultService $informationDefaultService,
+        EntityRepository $shippingRepository,
+        ?PosWebhookService $posWebhookService,
+        PaymentMethodInstaller $paymentMethodInstaller,
+        PaymentMethodStateService $paymentMethodStateService
     ) {
+        $this->systemConfig = $systemConfig;
+        $this->customFieldRepository = $customFieldRepository;
+        $this->webhookService = $webhookService;
+        $this->paymentRepository = $paymentRepository;
+        $this->salesChannelRepository = $salesChannelRepository;
+        $this->salesChannelTypeRepository = $salesChannelTypeRepository;
+        $this->informationDefaultService = $informationDefaultService;
+        $this->shippingRepository = $shippingRepository;
+        $this->posWebhookService = $posWebhookService;
+        $this->paymentMethodInstaller = $paymentMethodInstaller;
+        $this->paymentMethodStateService = $paymentMethodStateService;
     }
 
     public function update(UpdateContext $updateContext): void
@@ -128,20 +157,16 @@ class Update
             $this->updateTo730();
         }
 
-        if (\version_compare($updateContext->getCurrentPluginVersion(), '9.0.0', '<')) {
-            $this->updateTo900($updateContext->getContext());
+        if (\version_compare($updateContext->getCurrentPluginVersion(), '8.0.2', '<')) {
+            $this->updateTo802($updateContext->getContext());
         }
 
-        if (\version_compare($updateContext->getCurrentPluginVersion(), '9.0.2', '<')) {
-            $this->updateTo902($updateContext->getContext());
+        if (\version_compare($updateContext->getCurrentPluginVersion(), '8.1.0', '<')) {
+            $this->updateTo810($updateContext->getContext());
         }
 
-        if (\version_compare($updateContext->getCurrentPluginVersion(), '9.1.0', '<')) {
-            $this->updateTo910($updateContext->getContext());
-        }
-
-        if (\version_compare($updateContext->getCurrentPluginVersion(), '9.2.0', '<')) {
-            $this->updateTo920($updateContext->getContext());
+        if (\version_compare($updateContext->getCurrentPluginVersion(), '8.2.0', '<')) {
+            $this->updateTo820($updateContext->getContext());
         }
 
         if (\version_compare($updateContext->getCurrentPluginVersion(), '9.3.1', '<')) {
@@ -480,34 +505,7 @@ class Update
         $this->systemConfig->set(Settings::INSTALLMENT_BANNER_FOOTER_ENABLED, $installmentBannerEnabled);
     }
 
-    private function updateTo900(Context $context): void
-    {
-        $criteria = (new Criteria())
-            ->addFilter(new EqualsAnyFilter(
-                'handlerIdentifier',
-                $this->paymentMethodDataRegistry->getPaymentHandlers()
-            ));
-
-        /** @var PaymentMethodCollection $paymentMethods */
-        $paymentMethods = $this->paymentRepository->search($criteria, $context)->getEntities();
-
-        $upsertData = [];
-        foreach ($paymentMethods as $method) {
-            $handler = $this->paymentMethodDataRegistry->getPaymentMethodByHandler($method->getHandlerIdentifier());
-            if ($handler === null) {
-                continue;
-            }
-
-            $upsertData[] = [
-                'id' => $method->getId(),
-                'technicalName' => $handler->getTechnicalName(),
-            ];
-        }
-
-        $this->paymentRepository->upsert($upsertData, $context);
-    }
-
-    private function updateTo902(Context $context): void
+    private function updateTo802(Context $context): void
     {
         $salesChannelIds = $this->getSalesChannelIds($context);
 
@@ -520,13 +518,13 @@ class Update
         }
     }
 
-    private function updateTo910(Context $context): void
+    private function updateTo810(Context $context): void
     {
         $this->paymentMethodInstaller->install(ApplePayMethodData::class, $context);
         $this->paymentMethodInstaller->install(GooglePayMethodData::class, $context);
     }
 
-    private function updateTo920(Context $context): void
+    private function updateTo820(Context $context): void
     {
         try {
             $this->paymentMethodStateService->setPaymentMethodStateByHandler('Swag\PayPal\Checkout\Payment\Method\SofortAPMHandler', false, $context);

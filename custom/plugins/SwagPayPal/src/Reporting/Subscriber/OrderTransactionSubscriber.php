@@ -38,7 +38,7 @@ class OrderTransactionSubscriber implements EventSubscriberInterface
     {
         $transaction = $event->getOrder()->getTransactions()?->first();
         $handlerId = $transaction?->getPaymentMethod()?->getHandlerIdentifier();
-        $isSandbox = (bool) $transaction?->getCustomFieldsValue(SwagPayPal::ORDER_TRANSACTION_CUSTOM_FIELDS_PAYPAL_IS_SANDBOX);
+        $isSandbox = (bool) ($transaction?->getCustomFieldsValue(SwagPayPal::ORDER_TRANSACTION_CUSTOM_FIELDS_PAYPAL_IS_SANDBOX));
 
         if ($transaction === null
             || !\is_string($handlerId)

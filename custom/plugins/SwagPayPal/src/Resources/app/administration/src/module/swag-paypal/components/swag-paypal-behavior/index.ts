@@ -53,7 +53,7 @@ export default Shopware.Component.wrapComponentConfig({
         },
 
         /**
-         * @deprecated tag:v10.0.0 Will be removed without replacement.
+         * @deprecated tag:v9.0.0 Will be removed without replacement.
          */
         merchantLocationOptions() {
             return [

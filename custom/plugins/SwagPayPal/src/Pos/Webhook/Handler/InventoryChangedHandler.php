@@ -29,20 +29,43 @@ use Swag\PayPal\Pos\Webhook\WebhookEventNames;
 #[Package('checkout')]
 class InventoryChangedHandler extends AbstractWebhookHandler
 {
+    private ApiKeyDecoder $apiKeyDecoder;
+
+    private RunService $runService;
+
+    private LocalWebhookCalculator $localCalculator;
+
+    private LocalUpdater $localUpdater;
+
+    private InventorySyncer $inventorySyncer;
+
+    private InventoryContextFactory $inventoryContextFactory;
+
+    private EntityRepository $productRepository;
+
+    private UuidConverter $uuidConverter;
+
     /**
      * @internal
      */
     public function __construct(
-        private readonly ApiKeyDecoder $apiKeyDecoder,
-        private readonly RunService $runService,
-        private readonly LocalWebhookCalculator $localCalculator,
-        private readonly LocalUpdater $localUpdater,
-        private readonly InventorySyncer $inventorySyncer,
-        private readonly InventoryContextFactory $inventoryContextFactory,
-        private readonly EntityRepository $productRepository,
-        private readonly UuidConverter $uuidConverter,
-        private readonly bool $stockManagementEnabled
+        ApiKeyDecoder $apiKeyDecoder,
+        RunService $runService,
+        LocalWebhookCalculator $localCalculator,
+        LocalUpdater $localUpdater,
+        InventorySyncer $inventorySyncer,
+        InventoryContextFactory $inventoryContextFactory,
+        EntityRepository $productRepository,
+        UuidConverter $uuidConverter
     ) {
+        $this->apiKeyDecoder = $apiKeyDecoder;
+        $this->runService = $runService;
+        $this->localCalculator = $localCalculator;
+        $this->localUpdater = $localUpdater;
+        $this->inventorySyncer = $inventorySyncer;
+        $this->inventoryContextFactory = $inventoryContextFactory;
+        $this->productRepository = $productRepository;
+        $this->uuidConverter = $uuidConverter;
     }
 
     /**
@@ -66,10 +89,6 @@ class InventoryChangedHandler extends AbstractWebhookHandler
      */
     public function execute(AbstractPayload $payload, SalesChannelEntity $salesChannel, Context $context): void
     {
-        if (!$this->stockManagementEnabled) {
-            return;
-        }
-
         if ($this->isOwnClientId($payload->getUpdated()->getClientUuid(), $salesChannel)) {
             return;
         }

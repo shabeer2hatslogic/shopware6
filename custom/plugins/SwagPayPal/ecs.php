@@ -6,10 +6,10 @@
  */
 
 use PhpCsFixer\Fixer\Alias\MbStrFunctionsFixer;
-use PhpCsFixer\Fixer\ClassNotation\OrderedTraitsFixer;
 use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
 use PhpCsFixer\Fixer\FunctionNotation\NativeFunctionInvocationFixer;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
+use Symplify\EasyCodingStandard\ValueObject\Option;
 
 return static function (ECSConfig $ecsConfig): void {
     (include __DIR__ . '/../../../ecs.php')($ecsConfig);
@@ -23,10 +23,9 @@ file that was distributed with this source code.', 'separate' => 'bottom', 'loca
     ]);
     $ecsConfig->rule(MbStrFunctionsFixer::class);
 
-    // With PHP 8.3.8 it's necessary to have inherited traits in the correct order
-    $ecsConfig->skip([OrderedTraitsFixer::class]);
+    $parameters = $ecsConfig->parameters();
 
-    $ecsConfig->cacheDirectory(__DIR__ . '/var/cache/cs_fixer');
-    $ecsConfig->cacheNamespace('SwagPayPal');
-    $ecsConfig->paths([__DIR__ . '/src', __DIR__ . '/tests']);
+    $parameters->set(Option::CACHE_DIRECTORY, __DIR__ . '/var/cache/cs_fixer');
+    $parameters->set(Option::CACHE_NAMESPACE, 'SwagPayPal');
+    $parameters->set(Option::PATHS, [__DIR__ . '/src', __DIR__ . '/tests']);
 };

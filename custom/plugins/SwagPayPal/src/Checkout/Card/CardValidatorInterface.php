@@ -11,6 +11,7 @@ use Shopware\Core\Checkout\Payment\Cart\SyncPaymentTransactionStruct;
 use Shopware\Core\Framework\Log\Package;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Swag\PayPal\RestApi\V2\Api\Order;
+use Swag\PayPal\RestApi\V2\Api\Order\PaymentSource\Card\AuthenticationResult;
 
 #[Package('checkout')]
 interface CardValidatorInterface
@@ -36,4 +37,6 @@ interface CardValidatorInterface
     public const AUTHENTICATION_STATUS_DECOUPLED = 'D';
 
     public function validate(Order $order, SyncPaymentTransactionStruct $transaction, SalesChannelContext $salesChannelContext): bool;
+
+    public function validateAuthenticationResult(AuthenticationResult $authenticationResult, SalesChannelContext $salesChannelContext): bool;
 }

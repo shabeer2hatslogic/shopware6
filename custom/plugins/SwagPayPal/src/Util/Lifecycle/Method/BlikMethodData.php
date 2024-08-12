@@ -17,8 +17,6 @@ use Swag\PayPal\Util\Availability\AvailabilityContext;
 #[Package('checkout')]
 class BlikMethodData extends AbstractMethodData
 {
-    public const TECHNICAL_NAME = 'swag_paypal_blik';
-
     /**
      * @return array<string, array<string, string>>
      */
@@ -44,11 +42,6 @@ class BlikMethodData extends AbstractMethodData
     public function getHandler(): string
     {
         return 'Swag\PayPal\Checkout\Payment\Method\BlikAPMHandler';
-    }
-
-    public function getTechnicalName(): string
-    {
-        return self::TECHNICAL_NAME;
     }
 
     public function isAvailable(AvailabilityContext $availabilityContext): bool

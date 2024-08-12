@@ -1,17 +1,13 @@
 {% block sw_sales_channel_grid_columns_icon %}
 <sw-grid-column
-        v-if="isPayPalPosSalesChannel(item.id)"
-        flex="85px"
-        data-index="icon"
-        class="sw-sales-channel-modal-grid__icon-column"
-        label="icon"
+    v-if="isPayPalPosSalesChannel(item.id)"
+    class="sw-sales-channel-modal-grid__icon-column"
+    flex="85px"
+    dataIndex="icon"
 >
     <span
         class="sw-sales-channel-modal-grid__icon"
-        role="button"
-        tabindex="0"
         @click="onOpenDetail(item.id)"
-        @keydown.enter="onOpenDetail(item.id)"
     >
          <img
              class="swag-paypal-pos-modal-grid__icon"
@@ -24,4 +20,3 @@
     {% parent %}
 </template>
 {% endblock %}
-

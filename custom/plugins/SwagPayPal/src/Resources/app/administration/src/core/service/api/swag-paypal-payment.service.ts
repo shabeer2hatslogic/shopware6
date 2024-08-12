@@ -13,7 +13,7 @@ class SwagPayPalPaymentService extends ApiService {
         return this.httpClient.get<PayPal.Api.Operations<'paymentDetails'>>(
             `${this.getApiBasePath()}/payment-details/${orderId}/${payPalPaymentId}`,
             { headers: this.getBasicHeaders() },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 
     capturePayment(
@@ -28,7 +28,7 @@ class SwagPayPalPaymentService extends ApiService {
             `_action/${this.getApiBasePath()}/capture-payment/${resourceType}/${resourceId}/${orderId}`,
             { captureAmount, currency, captureIsFinal },
             { headers: this.getBasicHeaders() },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 
     refundPayment(
@@ -51,7 +51,7 @@ class SwagPayPalPaymentService extends ApiService {
                 refundInvoiceNumber,
             },
             { headers: this.getBasicHeaders() },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 
     voidPayment(orderId: string, resourceType: string, resourceId: string) {
@@ -59,7 +59,7 @@ class SwagPayPalPaymentService extends ApiService {
             `_action/${this.getApiBasePath()}/void-payment/${resourceType}/${resourceId}/${orderId}`,
             {},
             { headers: this.getBasicHeaders() },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 }
 

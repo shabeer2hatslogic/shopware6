@@ -24,7 +24,11 @@
         {% block sw_settings_shipping_detail_paypal_default_carrier_input %}
         <sw-single-select
             ref="carrierSelect"
+            {% if VUE3 %}
             v-model:value="payPalDefaultCarrier"
+            {% else %}
+            v-model="payPalDefaultCarrier"
+            {% endif %}
             :label="$tc('swag-paypal-settings-shipping-carrier.inputLabel')"
             :placeholder="$tc('swag-paypal-settings-shipping-carrier.inputPlaceholder')"
             :help-text="$tc('swag-paypal-settings-shipping-carrier.inputHelpText')"
@@ -68,7 +72,11 @@
 
         <sw-text-field
             v-if="selectedCarrierOption?.value === 'OTHER'"
+            {% if VUE3 %}
             v-model:value="payPalOtherCarrierName"
+            {% else %}
+            v-model="payPalOtherCarrierName"
+            {% endif %}
             :label="$tc('swag-paypal-settings-shipping-carrier.inputLabelOther')"
             :placeholder="$tc('swag-paypal-settings-shipping-carrier.inputPlaceholderOther')"
             :help-text="$tc('swag-paypal-settings-shipping-carrier.inputHelpTextOther')"

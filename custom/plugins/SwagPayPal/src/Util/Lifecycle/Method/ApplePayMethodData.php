@@ -48,7 +48,7 @@ class ApplePayMethodData extends AbstractMethodData implements CheckoutDataMetho
 
     public function getPosition(): int
     {
-        return -98;
+        return -101;
     }
 
     /**

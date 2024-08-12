@@ -169,7 +169,7 @@ class ExpressCustomerService
             self::EXPRESS_PAYER_ID => $paypal->getAccountId(),
         ]);
 
-        return $data;
+        return $data->toRequestDataBag();
     }
 
     /**

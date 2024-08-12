@@ -12,16 +12,15 @@ use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\Log\Package;
 use Shopware\Core\System\SalesChannel\SalesChannelEntity;
 use Swag\PayPal\Pos\Run\Task\InventoryTask;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(
-    'swag:paypal:pos:sync:inventory',
-    'Sync only inventory to Zettle',
-)]
 #[Package('checkout')]
 class PosInventorySyncCommand extends AbstractPosCommand
 {
+    protected static $defaultName = 'swag:paypal:pos:sync:inventory';
+
+    protected static $defaultDescription = 'Sync only inventory to Zettle';
+
     private InventoryTask $inventoryTask;
 
     /**

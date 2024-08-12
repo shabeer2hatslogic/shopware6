@@ -43,8 +43,6 @@ abstract class AbstractMethodData
 
     abstract public function getHandler(): string;
 
-    abstract public function getTechnicalName(): string;
-
     abstract public function isAvailable(AvailabilityContext $availabilityContext): bool;
 
     abstract public function getInitialState(): bool;

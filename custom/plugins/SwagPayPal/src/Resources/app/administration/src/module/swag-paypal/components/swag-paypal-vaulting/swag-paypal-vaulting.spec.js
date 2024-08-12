@@ -1,5 +1,11 @@
-import { mount } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
+import 'src/app/component/utils/sw-inherit-wrapper';
+import 'src/app/component/base/sw-card';
+import 'src/app/component/form/sw-switch-field';
+import 'src/app/component/form/sw-checkbox-field';
+import 'src/app/mixin/notification.mixin';
 import 'SwagPayPal/module/swag-paypal/components/swag-paypal-vaulting';
+import flushPromises from 'flush-promises';
 
 Shopware.Component.register('swag-paypal-vaulting', () => import('.'));
 
@@ -8,27 +14,24 @@ const onboardingCallbackSandbox = 'onboardingUrlSandbox';
 
 async function createWrapper(customOptions = {}) {
     const options = {
-        global: {
-            mocks: {
-                $tc: (key) => key,
+        mocks: {
+            $tc: (key) => key,
+        },
+        provide: {
+            acl: {
+                can: () => true,
             },
-            provide: {
-                acl: {
-                    can: () => true,
-                },
-                SwagPayPalApiCredentialsService: {
-                    getMerchantInformation: () => Promise.resolve({ capabilities: [] }),
-                },
+            SwagPayPalApiCredentialsService: {
+                getMerchantInformation: () => Promise.resolve({ capabilities: [] }),
             },
-            stubs: {
-                'sw-inherit-wrapper': {
-                    template: '<div class="sw-inherit-wrapper"><slot name="content"></slot></div>',
-                },
-                'sw-card': await wrapTestComponent('sw-card', { sync: true }),
-                'sw-card-deprecated': await wrapTestComponent('sw-card-deprecated', { sync: true }),
-                'sw-switch-field': await wrapTestComponent('sw-switch-field', { sync: true }),
-                'sw-checkbox-field': await wrapTestComponent('sw-checkbox-field', { sync: true }),
+        },
+        components: {
+            'sw-inherit-wrapper': {
+                template: '<div class="sw-inherit-wrapper"><slot name="content"></slot></div>',
             },
+            'sw-card': await Shopware.Component.build('sw-card'),
+            'sw-switch-field': await Shopware.Component.build('sw-switch-field'),
+            'sw-checkbox-field': await Shopware.Component.build('sw-checkbox-field'),
         },
         data() {
             return {
@@ -41,7 +44,7 @@ async function createWrapper(customOptions = {}) {
                 },
             };
         },
-        props: {
+        propsData: {
             actualConfigData: {
                 'SwagPayPal.settings.sandbox': true,
                 'SwagPayPal.settings.vaultingEnabled': true,
@@ -53,10 +56,10 @@ async function createWrapper(customOptions = {}) {
         },
     };
 
-    return mount(
-        await Shopware.Component.build('swag-paypal-vaulting'),
-        Shopware.Utils.object.mergeWith(options, customOptions),
-    );
+    return shallowMount(await Shopware.Component.build('swag-paypal-vaulting'), {
+        ...options,
+        ...customOptions,
+    });
 }
 
 describe('Paypal Vaulting Component', () => {
@@ -70,18 +73,19 @@ describe('Paypal Vaulting Component', () => {
 
     it('should set canHandleVaulting state correctly', async () => {
         const wrapper = await createWrapper({
-            global: {
-                provide: {
-                    SwagPayPalApiCredentialsService: {
-                        getMerchantInformation: () => Promise.resolve({
-                            capabilities: [],
-                            merchantIntegrations: {
-                                capabilities: [
-                                    { name: 'PAYPAL_WALLET_VAULTING_ADVANCED', status: 'ACTIVE' },
-                                ],
-                            },
-                        }),
-                    },
+            provide: {
+                acl: {
+                    can: () => true,
+                },
+                SwagPayPalApiCredentialsService: {
+                    getMerchantInformation: () => Promise.resolve({
+                        capabilities: [],
+                        merchantIntegrations: {
+                            capabilities: [
+                                { name: 'PAYPAL_WALLET_VAULTING_ADVANCED', status: 'ACTIVE' },
+                            ],
+                        },
+                    }),
                 },
             },
         });

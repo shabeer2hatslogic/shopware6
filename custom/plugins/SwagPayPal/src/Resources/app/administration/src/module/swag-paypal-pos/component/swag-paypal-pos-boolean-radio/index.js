@@ -7,6 +7,11 @@ const utils = Shopware.Utils;
 Component.register('swag-paypal-pos-boolean-radio', {
     template,
 
+    model: {
+        prop: 'value',
+        event: 'change',
+    },
+
     inject: ['feature'],
 
     props: {
@@ -59,7 +64,13 @@ Component.register('swag-paypal-pos-boolean-radio', {
             },
 
             set(val) {
-                this.$emit('update:value', val);
+                if (this.feature.isActive('VUE3')) {
+                    this.$emit('update:value', val);
+
+                    return;
+                }
+
+                this.$emit('change', val);
             },
         },
 

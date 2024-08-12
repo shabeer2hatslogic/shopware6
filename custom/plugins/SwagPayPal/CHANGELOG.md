@@ -1,4 +1,4 @@
-# 9.4.0
+# 8.4.0
 - PPI-807 - Improved script loading performance in the Storefront
 - PPI-924 - Added more explicit error messages for errors happening during express checkout
 - PPI-929 - Added onboarding notice for Apple and Google Pay payment methods
@@ -7,48 +7,46 @@
 - PPI-953 - Fixes an issue, where shipping tracking codes were not synced with an invalid carrier
 - PPI-956 - Improved logging and error handling for merchant configurations
 
-# 9.3.1
+# 8.3.1
 - PPI-944 - Fixes an issue, where payment status polling kept retrying with invalid transactions
-- PPI-945 - Fixes an issue, where excluded products were not correctly shown in the Administration
 - PPI-947 - Fixes an issue, where Smart Payment Buttons may have not been configurable
 - PPI-948 - Removed the no longer supported Giropay payment method
 
-# 9.3.0
+# 8.3.0
 - PPI-934 - Moved shipping tracking transmission to new PayPal API endpoints
 
-# 9.2.0
+# 8.2.0
 - PPI-666 - Added information on invoices for Pay Upon Invoice payments
 - PPI-924 - Added more explicit error messages for errors happening while checkout (e.g. postal code is missing)
 - PPI-932 - Removed the no longer supported Sofort payment method
 - PPI-936 - Fixes an issue, where Zettle may receive incorrect tax rates
 
-# 9.1.1
+# 8.1.1
+- PPI-925 - Fixes an issue, where Zettle settings couldn't be accessed
+- PPI-926 - Fixes an issue, where payment method overview was not displayed
+- PPI-927 - Fixes an issue, where refunds for PayPal Plus weren't working
 - PPI-933 - Fixes an issue, where Apple Pay domains may not be registerable correctly
 
-# 9.1.0
+# 8.1.0
 - PPI-850 - Added automated payment status polling for authorized and in-progress transactions
 - PPI-862 - Added vaulting (save customer) to Venmo payment method
 - PPI-863 - Added Apple Pay payment method
 - PPI-863 - Added Google Pay payment method
 - PPI-918 - Fixes an issue, where the refundable amount in the Administration was not shown correctly
 
-# 9.0.3
+# 8.0.3
+- PPI-896 - Changed the wording of the checkout Smart Payment Buttons from 'PayPal Checkout' to 'Pay with PayPal'
 - PPI-906 - Changed the express checkout button to make better use of remaining space for a more fitting layout
 - PPI-914 - Fixes an issue, where orders with only digital products could not be processed and were wrongly categorized as physical products
 - PPI-916 - Fixes an issue that may fail orders with landing page setting "Guest checkout"
 - PPI-917 - Moved Pay Upon Invoice Disclaimer above Confirm button
 
-# 9.0.2
+# 8.0.2
 - PPI-908 - Fixes an issue that sends an incorrect landing page setting to PayPal.
 
-# 9.0.1
-- PPI-896 - Changed the wording of the checkout Smart Payment Buttons from 'PayPal Checkout' to 'Pay with PayPal'.
+# 8.0.1
 - PPI-900 - Fixes an issue, where merchant integrations for payment methods are not loaded correctly
 - PPI-904 - Fixes timestamp issue that caused the Shop to be inoperable with certain cache configurations
-
-# 9.0.0
-- PPI-830 - Added compatibility with Showpare 6.6 & Symfony 7
-- PPI-857 - Added technical names for payment methods
 
 # 8.0.0
 - PPI-763 - Move "Pay later" banner underneath price display on product detail page

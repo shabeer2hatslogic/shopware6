@@ -21,7 +21,7 @@ class SwagPayPalDisputeApiService extends ApiService {
                 params: { salesChannelId, disputeStateFilter },
                 headers: this.getBasicHeaders(),
             },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 
     /**
@@ -34,7 +34,7 @@ class SwagPayPalDisputeApiService extends ApiService {
                 params: { salesChannelId },
                 headers: this.getBasicHeaders(),
             },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 }
 

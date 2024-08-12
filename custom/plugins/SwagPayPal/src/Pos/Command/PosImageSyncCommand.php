@@ -12,16 +12,15 @@ use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\Log\Package;
 use Shopware\Core\System\SalesChannel\SalesChannelEntity;
 use Swag\PayPal\Pos\Run\Task\ImageTask;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(
-    name: 'swag:paypal:pos:sync:images',
-    description: 'Sync only images to Zettle',
-)]
 #[Package('checkout')]
 class PosImageSyncCommand extends AbstractPosCommand
 {
+    protected static $defaultName = 'swag:paypal:pos:sync:images';
+
+    protected static $defaultDescription = 'Sync only images to Zettle';
+
     private ImageTask $imageTask;
 
     /**

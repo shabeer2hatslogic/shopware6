@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><base href="__$ASSET_BASE_PATH$__"><script defer="defer" src="bundles/swagpaypal/administration/js/swag-pay-pal.js"></script></head><body><script src="https://unpkg.com/@shopware-ag/meteor-admin-sdk/cdn"></script><script>if (sw.location.is(sw.location.MAIN_HIDDEN)) {
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><link href="/bundles/swagpaypal/administration/css/swag-pay-pal.css" rel="stylesheet"></head><body><script src="https://unpkg.com/@shopware-ag/admin-extension-sdk/cdn"></script><script>if (sw.location.is(sw.location.MAIN_HIDDEN)) {
         sw.ui.module.payment.overviewCard.add({
             positionId: 'swag-paypal-overview-card-before',
             component: 'swag-paypal-overview-card',
@@ -25,4 +25,4 @@
                 'handler_swag_googlepayhandler',
             ],
         });
-    }</script></body></html>
+    }</script><script src="/bundles/swagpaypal/administration/js/swag-pay-pal.js"></script></body></html>

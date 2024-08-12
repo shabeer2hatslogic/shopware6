@@ -24,7 +24,7 @@ abstract class AbstractCardValidator implements CardValidatorInterface
     ) {
     }
 
-    protected function validateAuthenticationResult(AuthenticationResult $authenticationResult, SalesChannelContext $salesChannelContext): bool
+    public function validateAuthenticationResult(AuthenticationResult $authenticationResult, SalesChannelContext $salesChannelContext): bool
     {
         if ($authenticationResult->getLiabilityShift() === self::LIABILITY_SHIFT_POSSIBLE
             || $authenticationResult->getLiabilityShift() === self::LIABILITY_SHIFT_YES) {

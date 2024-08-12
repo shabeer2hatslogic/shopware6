@@ -14,20 +14,20 @@ export default class SwagPayPalWebhookService extends ApiService {
             `_action/${this.getApiBasePath()}/webhook/register/${salesChannelId}`,
             {},
             { headers: this.getBasicHeaders() },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 
     unregister(salesChannelId: string | null) {
         return this.httpClient.delete<PayPal.Api.Operations<'deregisterWebhook'>>(
             `_action/${this.getApiBasePath()}/webhook/register/${salesChannelId}`,
             { headers: this.getBasicHeaders() },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 
     status(salesChannelId: string | null) {
         return this.httpClient.get<PayPal.Api.Operations<'getWebhookStatus'>>(
             `_action/${this.getApiBasePath()}/webhook/status/${salesChannelId}`,
             { headers: this.getBasicHeaders() },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 }

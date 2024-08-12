@@ -28,9 +28,9 @@ use Swag\PayPal\Webhook\WebhookHandler;
 abstract class AbstractWebhookHandler implements WebhookHandler
 {
     /**
-     * @param EntityRepository<OrderTransactionCollection> $orderTransactionRepository
-     *
      * @internal
+     *
+     * @param EntityRepository<OrderTransactionCollection> $orderTransactionRepository
      */
     public function __construct(
         protected readonly EntityRepository $orderTransactionRepository,
@@ -62,8 +62,7 @@ abstract class AbstractWebhookHandler implements WebhookHandler
                 $payPalTransactionId
             )
         );
-        /** @var OrderTransactionEntity|null $orderTransaction */
-        $orderTransaction = $this->orderTransactionRepository->search($criteria, $context)->first();
+        $orderTransaction = $this->orderTransactionRepository->search($criteria, $context)->getEntities()->first();
 
         if ($orderTransaction === null) {
             throw new WebhookOrderTransactionNotFoundException(
@@ -90,9 +89,8 @@ abstract class AbstractWebhookHandler implements WebhookHandler
         }
 
         $criteria = new Criteria([$orderTransactionId]);
-        $criteria->addAssociations(['order', 'stateMachineState']);
-        /** @var OrderTransactionEntity|null $orderTransaction */
-        $orderTransaction = $this->orderTransactionRepository->search($criteria, $context)->first();
+        $criteria->addAssociation('order');
+        $orderTransaction = $this->orderTransactionRepository->search($criteria, $context)->getEntities()->first();
 
         if ($orderTransaction === null) {
             throw new WebhookOrderTransactionNotFoundException(

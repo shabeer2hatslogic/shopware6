@@ -16,7 +16,7 @@ class SwagPayPalApiCredentialsService extends ApiService {
                 params: { clientId, clientSecret, sandboxActive },
                 headers: this.getBasicHeaders(),
             },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 
     getApiCredentials(
@@ -31,7 +31,7 @@ class SwagPayPalApiCredentialsService extends ApiService {
             `_action/${this.getApiBasePath()}/get-api-credentials`,
             { authCode, sharedId, nonce, sandboxActive },
             { params, headers: this.getBasicHeaders(additionalHeaders) },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 
     getMerchantInformation(salesChannelId: string | null = null) {
@@ -41,7 +41,7 @@ class SwagPayPalApiCredentialsService extends ApiService {
                 params: { salesChannelId },
                 headers: this.getBasicHeaders(),
             },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 }
 

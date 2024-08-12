@@ -17,7 +17,7 @@ class SwagPaypalPaymentMethodService extends ApiService {
             `_action/${this.getApiBasePath()}/saleschannel-default`,
             { salesChannelId },
             { headers: this.getBasicHeaders() },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 }
 

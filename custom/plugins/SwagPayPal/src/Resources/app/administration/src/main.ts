@@ -1,28 +1,14 @@
-import { location } from '@shopware-ag/meteor-admin-sdk';
+import './mixin/swag-paypal-credentials-loader.mixin';
+import './mixin/swag-paypal-notification.mixin';
+import './mixin/swag-paypal-pos-catch-error.mixin';
+import './mixin/swag-paypal-pos-log-label.mixin';
 
-const bootPromise = window.Shopware
-    ? (Shopware.Plugin.addBootPromise() as () => never) // it's wrongly typed as object in shopware
-    : undefined;
+import './module/extension';
+import './module/swag-paypal';
+import './module/swag-paypal-disputes';
+import './module/swag-paypal-payment';
+import './module/swag-paypal-pos';
 
-(async () => {
-    if (!location.isIframe()) {
-        await import('./mixin/swag-paypal-credentials-loader.mixin');
-        await import('./mixin/swag-paypal-notification.mixin');
-        await import('./mixin/swag-paypal-pos-catch-error.mixin');
-        await import('./mixin/swag-paypal-pos-log-label.mixin');
-
-        await import('./module/extension');
-        await import('./module/swag-paypal');
-        await import('./module/swag-paypal-disputes');
-        await import('./module/swag-paypal-payment');
-        await import('./module/swag-paypal-pos');
-
-        await import('./init/api-service.init');
-        await import('./init/translation.init');
-        await import('./init/svg-icons.init');
-    }
-
-    if (bootPromise) {
-        bootPromise();
-    }
-})();
+import './init/api-service.init';
+import './init/translation.init';
+import './init/svg-icons.init';

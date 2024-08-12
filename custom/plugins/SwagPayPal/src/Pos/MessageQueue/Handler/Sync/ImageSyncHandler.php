@@ -18,13 +18,11 @@ use Swag\PayPal\Pos\MessageQueue\MessageDispatcher;
 use Swag\PayPal\Pos\MessageQueue\MessageHydrator;
 use Swag\PayPal\Pos\Run\RunService;
 use Swag\PayPal\Pos\Sync\ImageSyncer;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
  * @internal
  */
 #[Package('checkout')]
-#[AsMessageHandler(handles: ImageSyncMessage::class)]
 class ImageSyncHandler extends AbstractSyncHandler
 {
     private EntityRepository $posMediaRepository;
@@ -71,5 +69,12 @@ class ImageSyncHandler extends AbstractSyncHandler
             );
 
         $this->imageSyncer->sync($posMediaCollection, $message->getSalesChannel(), $message->getContext());
+    }
+
+    public static function getHandledMessages(): iterable
+    {
+        return [
+            ImageSyncMessage::class,
+        ];
     }
 }

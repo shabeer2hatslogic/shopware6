@@ -1,7 +1,6 @@
 import type * as PayPal from 'src/types';
 import template from './swag-paypal-disputes-list.html.twig';
 import {
-    DISPUTE_AUTH_ERROR,
     DISPUTE_STATE_APPEALABLE,
     DISPUTE_STATE_OPEN_INQUIRIES,
     DISPUTE_STATE_REQUIRED_ACTION,
@@ -29,7 +28,6 @@ export default Shopware.Component.wrapComponentConfig({
 
     data(): {
         isLoading: boolean;
-        notAuthorized: boolean;
         disputes: PayPal.V1<'disputes_item'>[];
         disputeStates: { value: string; label: string }[];
         disputeStateFilter: string[];
@@ -41,37 +39,36 @@ export default Shopware.Component.wrapComponentConfig({
     } {
         return {
             isLoading: false,
-            notAuthorized: false,
             disputes: [],
             disputeStates: [
                 {
                     value: DISPUTE_STATE_REQUIRED_ACTION,
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
                     label: this.formatTechnicalText(DISPUTE_STATE_REQUIRED_ACTION),
                 },
                 {
                     value: DISPUTE_STATE_REQUIRED_OTHER_PARTY_ACTION,
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
                     label: this.formatTechnicalText(DISPUTE_STATE_REQUIRED_OTHER_PARTY_ACTION),
                 },
                 {
                     value: DISPUTE_STATE_UNDER_PAYPAL_REVIEW,
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
                     label: this.formatTechnicalText(DISPUTE_STATE_UNDER_PAYPAL_REVIEW),
                 },
                 {
                     value: DISPUTE_STATE_RESOLVED,
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
                     label: this.formatTechnicalText(DISPUTE_STATE_RESOLVED),
                 },
                 {
                     value: DISPUTE_STATE_OPEN_INQUIRIES,
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
                     label: this.formatTechnicalText(DISPUTE_STATE_OPEN_INQUIRIES),
                 },
                 {
                     value: DISPUTE_STATE_APPEALABLE,
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
                     label: this.formatTechnicalText(DISPUTE_STATE_APPEALABLE),
                 },
             ],
@@ -87,10 +84,6 @@ export default Shopware.Component.wrapComponentConfig({
     computed: {
         dateFilter() {
             return Filter.getByName('date');
-        },
-
-        showEmptyStateWithNoDisputes() {
-            return !this.notAuthorized && this.disputes.length === 0;
         },
 
         disputesColumns() {

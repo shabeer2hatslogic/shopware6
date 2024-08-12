@@ -20,8 +20,6 @@ use Swag\PayPal\Util\Availability\AvailabilityContext;
 #[Package('checkout')]
 class PUIMethodData extends AbstractMethodData
 {
-    public const TECHNICAL_NAME = 'swag_paypal_pui';
-
     /**
      * @return array<string, array<string, string>>
      */
@@ -50,11 +48,6 @@ class PUIMethodData extends AbstractMethodData
     public function getHandler(): string
     {
         return PUIHandler::class;
-    }
-
-    public function getTechnicalName(): string
-    {
-        return self::TECHNICAL_NAME;
     }
 
     public function isAvailable(AvailabilityContext $availabilityContext): bool

@@ -24,7 +24,7 @@ use Swag\PayPal\RestApi\V1\Resource\ShippingResource;
 use Swag\PayPal\SwagPayPal;
 
 /**
- * @deprecated tag:v10.0.0 - Will be removed without replacement. {@see ShippingInformationMessageHandler}
+ * @deprecated tag:v10.0.0 - Will be removed and is replaced by {@see ShippingInformationMessageHandler}
  */
 #[Package('checkout')]
 class ShippingService

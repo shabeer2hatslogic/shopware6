@@ -19,7 +19,7 @@ class SwagPayPalPosSettingApiService extends ApiService {
             `_action/${this.getApiBasePath()}/validate-api-credentials`,
             { apiKey, salesChannelId },
             { headers: this.getBasicHeaders() },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 
     /**
@@ -31,7 +31,7 @@ class SwagPayPalPosSettingApiService extends ApiService {
             `${this.getApiBasePath()}/fetch-information`,
             { apiKey: salesChannel.extensions?.paypalPosSalesChannel?.apiKey },
             { headers: this.getBasicHeaders() },
-        ).then(ApiService.handleResponse.bind(this)).then((data) => {
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler).then((data) => {
             data.extensions = {};
 
             salesChannel.languages ??= new EntityCollection('language', 'language', Shopware.Context.api);
@@ -71,7 +71,7 @@ class SwagPayPalPosSettingApiService extends ApiService {
             `_action/${this.getApiBasePath()}/clone-product-visibility`,
             { fromSalesChannelId, toSalesChannelId },
             { headers: this.getBasicHeaders() },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 
     /**
@@ -84,7 +84,7 @@ class SwagPayPalPosSettingApiService extends ApiService {
                 params: { salesChannelId, cloneSalesChannelId },
                 headers: this.getBasicHeaders(),
             },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 
     generateApiUrl(): string {

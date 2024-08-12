@@ -77,8 +77,8 @@ class PaymentSource extends PayPalApiStruct
     #[OA\Property(ref: P24::class, nullable: true)]
     protected ?P24 $p24 = null;
 
-    #[OA\Property(ref: Paypal::class, nullable: true)]
-    protected ?Paypal $paypal = null;
+    #[OA\Property(ref: PayPal::class, nullable: true)]
+    protected ?PayPal $paypal = null;
 
     /**
      * @deprecated tag:v10.0.0 - will be removed, payment method has been disabled

@@ -21,7 +21,7 @@ use Shopware\Core\Framework\Log\Package;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Swag\PayPal\Checkout\Card\CardValidatorInterface;
-use Swag\PayPal\Checkout\Card\Exception\CardValidationFailedException;
+use Swag\PayPal\Checkout\Card\Exception\ACDCValidationFailedException;
 use Swag\PayPal\Checkout\Exception\MissingPayloadException;
 use Swag\PayPal\Checkout\Payment\Service\OrderExecuteService;
 use Swag\PayPal\Checkout\Payment\Service\OrderPatchService;
@@ -121,7 +121,7 @@ class ACDCHandler extends AbstractPaymentMethodHandler implements AsynchronousPa
         $transactionId = $transaction->getOrderTransaction()->getId();
         $paypalOrderId = $transaction->getOrderTransaction()->getCustomFieldsValue(SwagPayPal::ORDER_TRANSACTION_CUSTOM_FIELDS_PAYPAL_ORDER_ID);
         if (!\is_string($paypalOrderId)) {
-            throw PaymentException::asyncProcessInterrupted($transactionId, 'Missing PayPal order id');
+            throw PaymentException::asyncFinalizeInterrupted($transactionId, 'Missing PayPal order id');
         }
 
         try {
@@ -135,7 +135,7 @@ class ACDCHandler extends AbstractPaymentMethodHandler implements AsynchronousPa
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
 
-            throw PaymentException::asyncProcessInterrupted($transactionId, $e->getMessage());
+            throw PaymentException::asyncFinalizeInterrupted($transactionId, $e->getMessage());
         }
 
         $card = $paypalOrder->getPaymentSource()?->getCard();
@@ -213,7 +213,7 @@ class ACDCHandler extends AbstractPaymentMethodHandler implements AsynchronousPa
         }
 
         if (!$this->acdcValidator->validate($paypalOrder, $transaction, $salesChannelContext)) {
-            throw CardValidationFailedException::cardValidationFailed($transaction->getOrderTransaction()->getId());
+            throw new ACDCValidationFailedException($transaction->getOrderTransaction()->getId());
         }
 
         return $this->orderExecuteService->captureOrAuthorizeOrder(

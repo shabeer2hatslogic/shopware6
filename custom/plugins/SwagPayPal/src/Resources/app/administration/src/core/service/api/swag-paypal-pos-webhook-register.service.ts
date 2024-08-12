@@ -14,14 +14,14 @@ class SwagPayPalPosWebhookRegisterService extends ApiService {
             `_action/${this.getApiBasePath()}/webhook/registration/${salesChannelId}`,
             {},
             { headers: this.getBasicHeaders() },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 
     unregisterWebhook(salesChannelId: string) {
         return this.httpClient.delete<PayPal.Api.Operations<'deregisterPosWebhook'>>(
             `_action/${this.getApiBasePath()}/webhook/registration/${salesChannelId}`,
             { headers: this.getBasicHeaders() },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 }
 

@@ -21,14 +21,13 @@ use Swag\PayPal\Pos\MessageQueue\Message\SyncManagerMessage;
 use Swag\PayPal\Pos\MessageQueue\MessageDispatcher;
 use Swag\PayPal\Pos\MessageQueue\MessageHydrator;
 use Swag\PayPal\Pos\Run\RunService;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Symfony\Component\Messenger\Handler\MessageSubscriberInterface;
 
 /**
  * @internal
  */
 #[Package('checkout')]
-#[AsMessageHandler]
-class SyncManagerHandler
+class SyncManagerHandler implements MessageSubscriberInterface
 {
     public const SYNC_PRODUCT = 'product';
     public const SYNC_IMAGE = 'image';
@@ -114,6 +113,13 @@ class SyncManagerHandler
         } finally {
             $this->runService->writeLog($runId, $context);
         }
+    }
+
+    public static function getHandledMessages(): iterable
+    {
+        return [
+            SyncManagerMessage::class,
+        ];
     }
 
     /**

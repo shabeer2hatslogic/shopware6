@@ -20,7 +20,7 @@ abstract class PayPalApiCollection implements \IteratorAggregate, \Countable, \J
     /**
      * @var array<array-key, TElement>
      */
-    protected array $elements = [];
+    protected $elements = [];
 
     /**
      * @param array<TElement> $elements
@@ -35,36 +35,21 @@ abstract class PayPalApiCollection implements \IteratorAggregate, \Countable, \J
     /**
      * @param TElement $element
      */
-    public function set(string|int $key, PayPalApiStruct $element): void
-    {
-        $this->validateType($element);
-
-        $this->elements[$key] = $element;
-    }
-
-    /**
-     * @return class-string<TElement>
-     */
-    abstract public static function getExpectedClass(): string;
-
-    public static function createFromAssociative(array $associativeData): static
-    {
-        $collection = new static();
-        foreach (\array_filter($associativeData) as $value) {
-            $collection->add((new (static::getExpectedClass())())->assign($value));
-        }
-
-        return $collection;
-    }
-
-    /**
-     * @param TElement $element
-     */
     public function add(PayPalApiStruct $element): void
     {
         $this->validateType($element);
 
         $this->elements[] = $element;
+    }
+
+    /**
+     * @param TElement $element
+     */
+    public function set(string|int $key, PayPalApiStruct $element): void
+    {
+        $this->validateType($element);
+
+        $this->elements[$key] = $element;
     }
 
     /**
@@ -77,11 +62,6 @@ abstract class PayPalApiCollection implements \IteratorAggregate, \Countable, \J
         }
 
         return null;
-    }
-
-    public function has(string|int $key): bool
-    {
-        return \array_key_exists($key, $this->elements);
     }
 
     public function clear(): void
@@ -102,6 +82,16 @@ abstract class PayPalApiCollection implements \IteratorAggregate, \Countable, \J
         return \array_keys($this->elements);
     }
 
+    public function has(string|int $key): bool
+    {
+        return \array_key_exists($key, $this->elements);
+    }
+
+    public function map(\Closure $closure): array
+    {
+        return \array_map($closure, $this->elements);
+    }
+
     public function reduce(\Closure $closure, mixed $initial = null): mixed
     {
         return \array_reduce($this->elements, $closure, $initial);
@@ -113,11 +103,6 @@ abstract class PayPalApiCollection implements \IteratorAggregate, \Countable, \J
     public function fmap(\Closure $closure): array
     {
         return \array_filter($this->map($closure));
-    }
-
-    public function map(\Closure $closure): array
-    {
-        return \array_map($closure, $this->elements);
     }
 
     public function sort(\Closure $closure): void
@@ -189,6 +174,29 @@ abstract class PayPalApiCollection implements \IteratorAggregate, \Countable, \J
     }
 
     /**
+     * @return class-string<TElement>
+     */
+    abstract public static function getExpectedClass(): string;
+
+    public static function createFromAssociative(array $associativeData): static
+    {
+        $collection = new static();
+        foreach (\array_filter($associativeData) as $value) {
+            $collection->add((new (static::getExpectedClass())())->assign($value));
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @param iterable<TElement> $elements
+     */
+    protected function createNew(iterable $elements = []): static
+    {
+        return new static($elements);
+    }
+
+    /**
      * @param TElement $element
      */
     protected function validateType(PayPalApiStruct $element): void
@@ -200,13 +208,5 @@ abstract class PayPalApiCollection implements \IteratorAggregate, \Countable, \J
                 \sprintf('Expected collection element of type %s got %s', $expectedClass, $element::class)
             );
         }
-    }
-
-    /**
-     * @param iterable<TElement> $elements
-     */
-    protected function createNew(iterable $elements = []): static
-    {
-        return new static($elements);
     }
 }

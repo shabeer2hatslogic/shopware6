@@ -1,32 +1,35 @@
-import { mount } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
+import 'src/app/component/base/sw-card';
+import 'src/app/component/base/sw-label';
+import 'src/app/component/base/sw-button';
 import 'SwagPayPal/module/swag-paypal/components/swag-paypal-webhook';
 
 Shopware.Component.register('swag-paypal-webhook', () => import('.'));
 
 async function createWrapper(customOptions = {}) {
     const options = {
-        global: {
-            mocks: { $tc: (key) => key },
-            provide: {
-                acl: {
-                    can: () => true,
-                },
-                SwagPayPalWebhookService: {
-                    status: () => Promise.resolve({ result: null }),
-                    register: () => Promise.resolve(),
-                },
+        mocks: { $tc: (key) => key },
+        provide: {
+            acl: {
+                can: () => true,
             },
-            stubs: {
-                'sw-button': await wrapTestComponent('sw-button', { sync: true }),
-                'sw-card': await wrapTestComponent('sw-card', { sync: true }),
-                'sw-card-deprecated': await wrapTestComponent('sw-card-deprecated', { sync: true }),
-                'sw-label': await wrapTestComponent('sw-label', { sync: true }),
+            feature: {
+                isActive: () => false,
             },
+            SwagPayPalWebhookService: {
+                status: () => Promise.resolve({ result: null }),
+                register: () => Promise.resolve(),
+            },
+        },
+        stubs: {
+            'sw-button': await Shopware.Component.build('sw-button'),
+            'sw-card': await Shopware.Component.build('sw-card'),
+            'sw-label': await Shopware.Component.build('sw-label'),
         },
         props: { selectedSalesChannelId: 'SALES_CHANNEL' },
     };
 
-    return mount(
+    return shallowMount(
         await Shopware.Component.build('swag-paypal-webhook'),
         Shopware.Utils.object.mergeWith(options, customOptions),
     );
@@ -45,11 +48,9 @@ describe('swag-paypal-webhook', () => {
         const spyStatus = jest.fn(() => Promise.resolve({ result: 'valid' }));
 
         await createWrapper({
-            global: {
-                provide: {
-                    SwagPayPalWebhookService: {
-                        status: spyStatus,
-                    },
+            provide: {
+                SwagPayPalWebhookService: {
+                    status: spyStatus,
                 },
             },
         });

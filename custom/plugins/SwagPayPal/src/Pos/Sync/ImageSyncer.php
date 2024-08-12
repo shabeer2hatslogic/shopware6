@@ -8,7 +8,7 @@
 namespace Swag\PayPal\Pos\Sync;
 
 use Psr\Log\LoggerInterface;
-use Shopware\Core\Content\Media\MediaException;
+use Shopware\Core\Content\Media\Exception\MediaNotFoundException;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
@@ -78,7 +78,7 @@ class ImageSyncer
             $media = $entity->getMedia();
 
             if ($media === null) {
-                throw MediaException::mediaNotFound($entity->getMediaId());
+                throw new MediaNotFoundException($entity->getMediaId());
             }
 
             try {
@@ -86,7 +86,7 @@ class ImageSyncer
                 $upload = $this->mediaConverter->convert($domain, $media, $entity->getLookupKey());
 
                 $bulkUpload->addImageUpload($upload);
-            } catch (InvalidMediaTypeException) {
+            } catch (InvalidMediaTypeException $invalidMediaTypeException) {
                 $this->logger->warning(
                     'Media Type {mimeType} is not supported by Zettle. Skipping image {fileName}.',
                     [
@@ -167,7 +167,7 @@ class ImageSyncer
                     $media = $entity->getMedia();
 
                     if ($media === null) {
-                        throw MediaException::mediaNotFound($entity->getMediaId());
+                        throw new MediaNotFoundException($entity->getMediaId());
                     }
 
                     return \mb_strpos($urlPath, $media->getUrl()) !== false
@@ -189,7 +189,7 @@ class ImageSyncer
         $media = $posMedia->getMedia();
 
         if ($media === null) {
-            throw MediaException::mediaNotFound($posMedia->getMediaId());
+            throw new MediaNotFoundException($posMedia->getMediaId());
         }
 
         return [

@@ -1,4 +1,4 @@
-# 9.4.0
+# 8.4.0
 - PPI-807 - Verbessert die Ladezeit der Scripte in der Storefront
 - PPI-924 - Fügt genauere Fehlermeldungen für Fehler während des Express Checkouts hinzu
 - PPI-929 - Fügt Onboarding-Informationen für die Zahlungsarten Apple und Google Pay hinzu
@@ -7,48 +7,46 @@
 - PPI-953 - Behebt ein Problem, bei dem Sendungsverfolgungsdaten bei invaliden Versanddienstleister nicht an PayPal übermittelt wurden
 - PPI-956 - Verbessert das Logging und die Fehlerbehandlung für Händlereinstellungen
 
-# 9.3.1
+# 8.3.1
 - PPI-944 - Behebt ein Problem, bei dem die Abfrage des Zahlungsstatus bei invaliden Transaktionen weiter versucht wurde
-- PPI-945 - Behebt ein Problem, bei dem ausgeschlossene Produkte nicht korrekt in der Administration angezeigt wurden
 - PPI-947 - Behebt ein Problem, bei dem Smart Payment Buttons möglicherweise nicht konfigurierbar waren
 - PPI-948 - Entfernt die nicht mehr unterstützte Giropay-Zahlungsart
 
-# 9.3.0
+# 8.3.0
 - PPI-934 - Übermittlung von Sendungsverfolgungsdaten auf neue PayPal-API-Endpunkte umgezogen
 
-# 9.2.0
+# 8.2.0
 - PPI-666 - Zusätzliche Informationen auf Rechnung für Rechnungskäufe hinzugefügt
 - PPI-924 - Explizitere Fehlermeldungen für Fehler beim Checkout hinzugefügt (z.B. Postleitzahl fehlt)
 - PPI-932 - Entfernt die nicht mehr unterstützte Sofort-Zahlungsart
 - PPI-936 - Behebt ein Problem, bei dem Zettle evtl. inkorrekte Steuersätze erhält
 
-# 9.1.1
+# 8.1.1
+- PPI-925 - Behebt ein Problem, bei dem nicht auf die Zettle-Einstellungen zugegriffen werden konnte
+- PPI-926 - Behebt ein Problem, bei dem die Zahlungsartenübersicht nicht dargestellt wurde
+- PPI-927 - Behebt ein Problem, bei dem Rückerstattungen für PayPal Plus nicht funktionierten
 - PPI-933 - Behebt ein Problem, bei dem Apple Pay-Domains möglicherweise nicht korrekt registriert werden können
 
-# 9.1.0
+# 8.1.0
 - PPI-850 - Automatische Abfrage des Zahlungsstatus für autorisierte und in Bearbeitung befindliche Transaktionen erweitert
 - PPI-862 - Vaulting (Kunden speichern) für Zahlungsart Venmo hinzugefügt
 - PPI-863 - Zahlungsart Apple Pay hinzugefügt
 - PPI-863 - Zahlungsart Google Pay hinzugefügt
 - PPI-918 - Behebt ein Problem, bei dem der rückerstattbare Betrag in der Administration nicht korrekt angezeigt wurde
 
-# 9.0.3
+# 8.0.3
+- PPI-896 - Änderung der Checkout Smart Payment Buttons von 'Direkt zu PayPal' zu 'Mit PayPal zahlen'
 - PPI-906 - Änderung der Express Buttons, sodass diese freien Platz besser nutzen und zum restlichen Layout passen
 - PPI-914 - Behebt ein Problem, bei dem Bestellungen mit ausschließlich digitalen Produkten fehlschlugen und inkorrekt kategorisiert wurden
 - PPI-916 - Behebt ein Problem, bei dem Bestellungen mit der Landingpage-Einstellung "Gast-Checkout" fehlschlagen können
 - PPI-917 - Rechnungskauf-Disclaimer über den Bestätigungsbutton verschoben
 
-# 9.0.2
+# 8.0.2
 - PPI-908 - Behebt ein Problem, welches eine falsche Landingpage Einstellung an PayPal übermittelt.
 
-# 9.0.1
-- PPI-896 - Änderung der Checkout Smart Payment Buttons von 'Direkt zu PayPal' zu 'Mit PayPal zahlen'.
+# 8.0.1
 - PPI-900 - Behebt ein Problem, bei dem Händler Integrationen für Zahlungsmethoden nicht korrekt geladen werden
 - PPI-904 - Behebt ein Timestamp-Problem, welches den Shop mit bestimmten Cache-Konfigurationen unbenutzbar macht
-
-# 9.0.0
-- PPI-830 - Kompatibilität mit Shopware 6.6 und Symfony 7 hinzugefügt
-- PPI-857 - Technische Namen für PayPal-Zahlungsarten hinzugefügt 
 
 # 8.0.0
 - PPI-763 - "Später bezahlen" Banner wird unterhalb des Preises auf der Produktdetailseite angezeigt

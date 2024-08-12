@@ -10,7 +10,7 @@ namespace Swag\PayPal\Util;
 use Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionEntity;
 use Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionStateHandler;
 use Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionStates;
-use Shopware\Core\Checkout\Payment\PaymentException;
+use Shopware\Core\Checkout\Payment\Exception\InvalidTransactionException;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -88,7 +88,7 @@ class PaymentStatusUtilV2
         $transactionId = $transaction->getId();
         $stateMachineState = $transaction->getStateMachineState();
         if ($stateMachineState === null) {
-            throw PaymentException::invalidTransaction($transactionId);
+            throw new InvalidTransactionException($transactionId);
         }
 
         if ($captureResponse->isFinalCapture()) {
@@ -123,13 +123,11 @@ class PaymentStatusUtilV2
     private function getOrderTransaction(string $orderTransactionId, Context $context): OrderTransactionEntity
     {
         $criteria = new Criteria([$orderTransactionId]);
-        $criteria->addAssociation('stateMachineState');
-
         /** @var OrderTransactionEntity|null $transaction */
         $transaction = $this->orderTransactionRepository->search($criteria, $context)->first();
 
         if ($transaction === null) {
-            throw PaymentException::invalidTransaction($orderTransactionId);
+            throw new InvalidTransactionException($orderTransactionId);
         }
 
         return $transaction;
@@ -141,7 +139,7 @@ class PaymentStatusUtilV2
         Context $context
     ): void {
         if ($stateMachineState === null) {
-            throw PaymentException::invalidTransaction($transactionId);
+            throw new InvalidTransactionException($transactionId);
         }
 
         // TODO PPI-59 - Do transition even if transaction is already partially refunded.

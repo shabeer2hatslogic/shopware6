@@ -15,7 +15,7 @@ class SwagPayPalOrderService extends ApiService {
             {
                 headers: this.getBasicHeaders(),
             },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 
     refundCapture(
@@ -66,7 +66,7 @@ class SwagPayPalOrderService extends ApiService {
             {
                 headers: this.getBasicHeaders(),
             },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 }
 

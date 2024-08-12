@@ -13,7 +13,7 @@ use Shopware\Core\Checkout\Payment\Cart\SyncPaymentTransactionStruct;
 use Shopware\Core\Framework\Log\Package;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Swag\PayPal\Checkout\Card\CardValidatorInterface;
-use Swag\PayPal\Checkout\Card\Exception\CardValidationFailedException;
+use Swag\PayPal\Checkout\Card\Exception\GooglePayValidationFailedException;
 use Swag\PayPal\Checkout\Payment\Service\OrderExecuteService;
 use Swag\PayPal\Checkout\Payment\Service\OrderPatchService;
 use Swag\PayPal\Checkout\Payment\Service\TransactionDataService;
@@ -45,7 +45,7 @@ class GooglePayHandler extends AbstractSyncAPMHandler
     protected function executeOrder(SyncPaymentTransactionStruct $transaction, Order $paypalOrder, SalesChannelContext $salesChannelContext): Order
     {
         if (!$this->googlePayValidator->validate($paypalOrder, $transaction, $salesChannelContext)) {
-            throw CardValidationFailedException::cardValidationFailed($transaction->getOrderTransaction()->getId());
+            throw new GooglePayValidationFailedException($transaction->getOrderTransaction()->getId());
         }
 
         return parent::executeOrder($transaction, $paypalOrder, $salesChannelContext);

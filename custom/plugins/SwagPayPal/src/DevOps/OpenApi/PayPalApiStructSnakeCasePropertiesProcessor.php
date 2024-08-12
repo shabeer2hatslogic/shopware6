@@ -30,6 +30,7 @@ class PayPalApiStructSnakeCasePropertiesProcessor
 
             if (!\class_exists($fqdn)) {
                 $property->_context->logger?->error(\sprintf('Class %s does not exist', $fqdn));
+
                 continue;
             }
 

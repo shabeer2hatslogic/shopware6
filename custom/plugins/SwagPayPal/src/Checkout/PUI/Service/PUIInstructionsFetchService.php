@@ -56,6 +56,7 @@ class PUIInstructionsFetchService
         }
 
         $order = $this->orderResource->get($paypalOrderId, $salesChannelId);
+
         try {
             if ($order->getStatus() === PaymentStatusV2::ORDER_APPROVED) {
                 $this->orderTransactionStateHandler->authorize($transaction->getId(), $context);

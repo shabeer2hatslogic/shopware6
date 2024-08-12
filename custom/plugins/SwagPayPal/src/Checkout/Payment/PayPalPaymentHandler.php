@@ -16,6 +16,9 @@ use Shopware\Core\Checkout\Payment\Cart\AsyncPaymentTransactionStruct;
 use Shopware\Core\Checkout\Payment\Cart\PaymentHandler\AsynchronousPaymentHandlerInterface;
 use Shopware\Core\Checkout\Payment\Cart\PaymentHandler\RecurringPaymentHandlerInterface;
 use Shopware\Core\Checkout\Payment\Cart\RecurringPaymentTransactionStruct;
+use Shopware\Core\Checkout\Payment\Exception\AsyncPaymentFinalizeException;
+use Shopware\Core\Checkout\Payment\Exception\AsyncPaymentProcessException;
+use Shopware\Core\Checkout\Payment\Exception\CustomerCanceledAsyncPaymentException;
 use Shopware\Core\Checkout\Payment\PaymentException;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
@@ -45,12 +48,12 @@ class PayPalPaymentHandler implements AsynchronousPaymentHandlerInterface, Recur
     public const PAYPAL_SMART_PAYMENT_BUTTONS_ID = 'isPayPalSpbCheckout';
 
     /**
-     * @deprecated tag:v10.0.0 - Will be removed without replacement.
+     * @deprecated tag:v9.0.0 - Will be removed without replacement.
      */
     public const PAYPAL_PLUS_CHECKOUT_REQUEST_PARAMETER = 'isPayPalPlus';
 
     /**
-     * @deprecated tag:v10.0.0 - Will be removed without replacement.
+     * @deprecated tag:v9.0.0 - Will be removed without replacement.
      */
     public const PAYPAL_PLUS_CHECKOUT_ID = 'isPayPalPlusCheckout';
 
@@ -75,7 +78,7 @@ class PayPalPaymentHandler implements AsynchronousPaymentHandlerInterface, Recur
     }
 
     /**
-     * @throws PaymentException
+     * @throws AsyncPaymentProcessException
      */
     public function pay(
         AsyncPaymentTransactionStruct $transaction,
@@ -108,12 +111,13 @@ class PayPalPaymentHandler implements AsynchronousPaymentHandlerInterface, Recur
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage(), ['error' => $e]);
 
-            throw PaymentException::asyncProcessInterrupted($transactionId, $e->getMessage());
+            throw new AsyncPaymentProcessException($transactionId, $e->getMessage());
         }
     }
 
     /**
-     * @throws PaymentException
+     * @throws AsyncPaymentFinalizeException
+     * @throws CustomerCanceledAsyncPaymentException
      */
     public function finalize(
         AsyncPaymentTransactionStruct $transaction,
@@ -131,7 +135,7 @@ class PayPalPaymentHandler implements AsynchronousPaymentHandlerInterface, Recur
         if ($request->query->getBoolean(self::PAYPAL_REQUEST_PARAMETER_CANCEL)) {
             $this->logger->debug('Customer canceled');
 
-            throw PaymentException::customerCanceled(
+            throw new CustomerCanceledAsyncPaymentException(
                 $transaction->getOrderTransaction()->getId(),
                 'Customer canceled the payment on the PayPal page'
             );
@@ -184,7 +188,7 @@ class PayPalPaymentHandler implements AsynchronousPaymentHandlerInterface, Recur
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage(), ['error' => $e]);
 
-            throw PaymentException::asyncFinalizeInterrupted($transaction->getOrderTransaction()->getId(), $e->getMessage());
+            throw new AsyncPaymentFinalizeException($transaction->getOrderTransaction()->getId(), $e->getMessage());
         }
     }
 

@@ -12,7 +12,7 @@ use Shopware\Core\Checkout\Cart\Cart;
 use Shopware\Core\Checkout\Cart\LineItem\LineItem;
 use Shopware\Core\Checkout\Cart\LineItem\LineItemCollection;
 use Shopware\Core\Checkout\Cart\Price\Struct\CalculatedPrice;
-use Shopware\Core\Checkout\Payment\PaymentException;
+use Shopware\Core\Checkout\Payment\Exception\InvalidTransactionException;
 use Shopware\Core\Framework\Log\Package;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
@@ -71,7 +71,7 @@ class CartPaymentBuilder extends AbstractPaymentBuilder implements CartPaymentBu
     }
 
     /**
-     * @throws PaymentException
+     * @throws InvalidTransactionException
      */
     private function createTransactionFromCart(
         Cart $cart,
@@ -80,7 +80,7 @@ class CartPaymentBuilder extends AbstractPaymentBuilder implements CartPaymentBu
     ): Transaction {
         $cartTransaction = $cart->getTransactions()->first();
         if ($cartTransaction === null) {
-            throw PaymentException::invalidTransaction('');
+            throw new InvalidTransactionException('');
         }
         $transactionAmount = $cartTransaction->getAmount();
         $currencyCode = $salesChannelContext->getCurrency()->getIsoCode();

@@ -11,7 +11,7 @@ use Shopware\Core\Checkout\Cart\Cart;
 use Shopware\Core\Checkout\Customer\CustomerEntity;
 use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Checkout\Payment\Cart\AsyncPaymentTransactionStruct;
-use Shopware\Core\Checkout\Payment\PaymentException;
+use Shopware\Core\Checkout\Payment\Exception\InvalidOrderException;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\Log\Package;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
@@ -31,7 +31,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * @deprecated tag:v10.0.0 - Will be removed without replacement.
+ * @deprecated tag:v9.0.0 - Will be removed without replacement.
  */
 #[Package('checkout')]
 class PlusDataService
@@ -44,7 +44,7 @@ class PlusDataService
 
     private PaymentResource $paymentResource;
 
-    private PaymentMethodUtil $paymentMethodUtil;
+    private PaymentMethodUtil$paymentMethodUtil;
 
     private LocaleCodeProvider $localeCodeProvider;
 
@@ -97,12 +97,12 @@ class PlusDataService
 
         $transactions = $order->getTransactions();
         if ($transactions === null) {
-            throw PaymentException::invalidOrder($order->getId());
+            throw new InvalidOrderException($order->getId());
         }
 
         $firstTransaction = $transactions->first();
         if ($firstTransaction === null) {
-            throw PaymentException::invalidOrder($order->getId());
+            throw new InvalidOrderException($order->getId());
         }
 
         $finishUrl = $this->createFinishUrl(true);

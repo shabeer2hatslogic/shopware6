@@ -3,7 +3,7 @@ import template from './swag-paypal-plus.html.twig';
 import './swag-paypal-plus.scss';
 
 /**
- * @deprecated tag:v10.0.0 - Will be removed without replacement.
+ * @deprecated tag:v9.0.0 - Will be removed without replacement.
  */
 export default Shopware.Component.wrapComponentConfig({
     template,

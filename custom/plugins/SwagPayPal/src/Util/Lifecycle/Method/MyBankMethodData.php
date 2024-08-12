@@ -17,8 +17,6 @@ use Swag\PayPal\Util\Availability\AvailabilityContext;
 #[Package('checkout')]
 class MyBankMethodData extends AbstractMethodData
 {
-    public const TECHNICAL_NAME = 'swag_paypal_my_bank';
-
     /**
      * @return array<string, array<string, string>>
      */
@@ -44,11 +42,6 @@ class MyBankMethodData extends AbstractMethodData
     public function getHandler(): string
     {
         return 'Swag\PayPal\Checkout\Payment\Method\MyBankAPMHandler';
-    }
-
-    public function getTechnicalName(): string
-    {
-        return self::TECHNICAL_NAME;
     }
 
     public function isAvailable(AvailabilityContext $availabilityContext): bool

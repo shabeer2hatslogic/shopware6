@@ -14,8 +14,6 @@ use Shopware\Core\Framework\Log\Package;
 use Shopware\Core\Framework\Plugin\Exception\DecorationPatternException;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
-use Swag\PayPal\Checkout\Cart\Service\CartPriceService;
-use Swag\PayPal\Checkout\Exception\OrderZeroValueException;
 use Swag\PayPal\Checkout\TokenResponse;
 use Swag\PayPal\OrdersApi\Builder\PayPalOrderBuilder;
 use Swag\PayPal\RestApi\PartnerAttributionId;
@@ -36,7 +34,6 @@ class ExpressCreateOrderRoute extends AbstractExpressCreateOrderRoute
         private readonly CartService $cartService,
         private readonly PayPalOrderBuilder $paypalOrderBuilder,
         private readonly OrderResource $orderResource,
-        private readonly CartPriceService $cartPriceService,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -62,11 +59,6 @@ class ExpressCreateOrderRoute extends AbstractExpressCreateOrderRoute
         try {
             $this->logger->debug('Started');
             $cart = $this->cartService->getCart($salesChannelContext->getToken(), $salesChannelContext);
-
-            if ($this->cartPriceService->isZeroValueCart($cart)) {
-                throw new OrderZeroValueException();
-            }
-
             $this->logger->debug('Building order');
             $order = $this->paypalOrderBuilder->getOrderFromCart($cart, $salesChannelContext, new RequestDataBag($request->request->all()));
             $order->getPaymentSource()?->getPaypal()?->getExperienceContext()->setShippingPreference(ApplicationContext::SHIPPING_PREFERENCE_GET_FROM_FILE);

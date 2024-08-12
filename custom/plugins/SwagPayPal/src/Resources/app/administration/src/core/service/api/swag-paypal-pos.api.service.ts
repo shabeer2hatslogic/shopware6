@@ -22,7 +22,7 @@ class SwagPayPalPosApiService extends ApiService {
                 ...this.basicConfig,
                 headers: this.getBasicHeaders(),
             },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 
     startProductSync(salesChannelId: string | null) {
@@ -33,7 +33,7 @@ class SwagPayPalPosApiService extends ApiService {
                 ...this.basicConfig,
                 headers: this.getBasicHeaders(),
             },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 
     startInventorySync(salesChannelId: string | null) {
@@ -44,7 +44,7 @@ class SwagPayPalPosApiService extends ApiService {
                 ...this.basicConfig,
                 headers: this.getBasicHeaders(),
             },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 
     startImageSync(salesChannelId: string | null) {
@@ -55,7 +55,7 @@ class SwagPayPalPosApiService extends ApiService {
                 ...this.basicConfig,
                 headers: this.getBasicHeaders(),
             },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 
     startLogCleanup(salesChannelId: string | null) {
@@ -66,7 +66,7 @@ class SwagPayPalPosApiService extends ApiService {
                 ...this.basicConfig,
                 headers: this.getBasicHeaders(),
             },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 
     abortSync(runId: string) {
@@ -77,7 +77,7 @@ class SwagPayPalPosApiService extends ApiService {
                 ...this.basicConfig,
                 headers: this.getBasicHeaders(),
             },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 
     resetSync(salesChannelId: string | null) {
@@ -88,7 +88,7 @@ class SwagPayPalPosApiService extends ApiService {
                 ...this.basicConfig,
                 headers: this.getBasicHeaders(),
             },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 
     getProductLog(salesChannelId: string | null, page = 1, limit = 10) {
@@ -99,7 +99,7 @@ class SwagPayPalPosApiService extends ApiService {
                 headers: this.getBasicHeaders(),
                 params: { page, limit },
             },
-        ).then(ApiService.handleResponse.bind(this));
+        ).then(ApiService.handleResponse.bind(this) as TResponseHandler);
     }
 }
 

@@ -34,7 +34,11 @@ export default Shopware.Component.wrapComponentConfig({
         checkValue(value?: string) {
             const localeCodeRegex = /^[a-z]{2}_[A-Z]{2}$/;
 
-            this.$emit('update:value', value || '');
+            if (this.feature.isActive('VUE3')) {
+                this.$emit('update:value', value || '');
+            } else {
+                this.$emit('change', value || '');
+            }
 
 
             if (!value || localeCodeRegex.exec(value)) {

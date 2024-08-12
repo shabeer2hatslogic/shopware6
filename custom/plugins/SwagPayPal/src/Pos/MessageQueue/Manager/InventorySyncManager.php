@@ -28,17 +28,25 @@ class InventorySyncManager extends AbstractSyncManager
 {
     public const CHUNK_SIZE = 500;
 
+    private InventoryContextFactory $inventoryContextFactory;
+
+    private ProductSelection $productSelection;
+
+    private SalesChannelRepository $productRepository;
+
     /**
      * @internal
      */
     public function __construct(
         MessageDispatcher $messageBus,
-        private readonly ProductSelection $productSelection,
-        private readonly SalesChannelRepository $productRepository,
-        private readonly InventoryContextFactory $inventoryContextFactory,
-        private readonly bool $stockManagementEnabled
+        ProductSelection $productSelection,
+        SalesChannelRepository $productRepository,
+        InventoryContextFactory $inventoryContextFactory
     ) {
         parent::__construct($messageBus);
+        $this->productSelection = $productSelection;
+        $this->productRepository = $productRepository;
+        $this->inventoryContextFactory = $inventoryContextFactory;
     }
 
     /**
@@ -46,10 +54,6 @@ class InventorySyncManager extends AbstractSyncManager
      */
     public function createMessages(SalesChannelEntity $salesChannel, Context $context, string $runId, ?array $reducedIds = null): array
     {
-        if (!$this->stockManagementEnabled) {
-            return [];
-        }
-
         $salesChannelContext = $this->productSelection->getSalesChannelContext($salesChannel);
 
         /** @var PosSalesChannelEntity $posSalesChannel */

@@ -24,8 +24,6 @@ use Swag\PayPal\Util\Availability\AvailabilityContext;
 #[Package('checkout')]
 class PayPalMethodData extends AbstractMethodData implements CheckoutDataMethodInterface
 {
-    public const TECHNICAL_NAME = 'swag_paypal_paypal';
-
     public const PAYPAL_SMART_PAYMENT_BUTTONS_DATA_EXTENSION_ID = 'payPalSpbButtonData';
 
     /**
@@ -53,11 +51,6 @@ class PayPalMethodData extends AbstractMethodData implements CheckoutDataMethodI
     public function getHandler(): string
     {
         return PayPalPaymentHandler::class;
-    }
-
-    public function getTechnicalName(): string
-    {
-        return self::TECHNICAL_NAME;
     }
 
     public function isAvailable(AvailabilityContext $availabilityContext): bool
