@@ -1,0 +1,26 @@
+@import "~scss/variables";
+
+/* Your SCSS file */
+.sw-product-list-bigger-column {
+    .sw-data-grid__wrapper {
+        .sw-data-grid__table {
+            .sw-data-grid__body {
+                .sw-data-grid__row {
+                    height: 100px !important;
+
+                    .sw-data-grid__cell {
+                        height: 100px !important;
+
+                        .sw-data-grid__cell-content {
+                            height: 100px !important;
+                            .sw-media-preview-v2 {
+                                height: 80px !important;
+                                width: 80px !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

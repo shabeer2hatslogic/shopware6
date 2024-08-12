@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+
+    <card>
+        <title>Admin Css Settings</title>
+        <title lang="de-DE">Admin Css Einstellungen</title>
+
+        <input-field type="textarea">
+            <name>customCss</name>
+            <label>Css For Admin (Order Create, Edit Pages) </label>
+            <label lang="de-DE">Css für Admin (Bestellung Erstellen, Bearbeiten)</label>
+            <placeholder>Css For Admin (Order Create, Edit Pages)</placeholder>
+            <placeholder lang="de-DE">Css für Admin (Bestellung Erstellen, Bearbeiten)</placeholder>
+            <helpText>This css will be applied on order create and detail pages</helpText>
+            <helpText lang="de-DE">Dieser Css wird auf die Bestellung Erstellen und Details Seiten
+                angewendet</helpText>
+        </input-field>
+
+    </card>
+
+</config>

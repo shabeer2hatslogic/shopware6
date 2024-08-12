@@ -1,0 +1,85 @@
+{% block sw_product_list_grid %}
+	<sw-entity-listing
+		v-if="entitySearchable" ref="swProductGrid" class="sw-product-list-grid sw-product-list-bigger-column" :items="products" :columns="productColumns" :repository="productRepository" detail-route="sw.product.detail" :show-selection="true" :is-loading="isLoading" identifier="sw-product-list" :allow-edit="acl.can('product.editor')" :allow-delete="acl.can('product.deleter')" :allow-inline-edit="acl.can('product.editor')" :sort-by="currentSortBy" :sort-direction="sortDirection" :natural-sorting="naturalSorting" :criteria-limit="limit" :disable-data-fetching="true" :allow-bulk-edit="acl.can('product.editor')" @column-sort="onColumnSort" @page-change="onPageChange" @inline-edit-save="onInlineEditSave" @selection-change="updateSelection" @update-records="updateTotal" @bulk-edit-modal-open="onBulkEditModalOpen">
+		<!-- eslint-disable-next-line sw-deprecation-rules/no-twigjs-blocks -->
+		{% block sw_product_list_grid_columns %}
+			<!-- eslint-disable-next-line sw-deprecation-rules/no-twigjs-blocks -->
+			{% block sw_product_list_grid_columns_name_preview %}
+				<template #preview-name="{ item }">
+					<sw-media-preview-v2 :source="item.cover ? item.cover.media : null"/>
+				</template>
+			{% endblock %}
+
+			<!-- eslint-disable-next-line sw-deprecation-rules/no-twigjs-blocks -->
+			{% block sw_product_list_grid_columns_name %}
+				<template
+					#column-name="{ item, isInlineEdit }">
+					<!-- eslint-disable-next-line sw-deprecation-rules/no-twigjs-blocks -->
+					{% block sw_product_list_grid_columns_name_inline_edit %}
+						<sw-text-field v-if="isInlineEdit" v-model="item.name" size="small"/>
+					{% endblock %}
+
+					<!-- eslint-disable-next-line sw-deprecation-rules/no-twigjs-blocks -->
+					{% block sw_product_list_grid_columns_name_content %}
+						<div
+							v-else>
+							<!-- eslint-disable-next-line sw-deprecation-rules/no-twigjs-blocks -->
+							{% block sw_product_list_grid_columns_name_content_variant_button %}
+								<sw-button v-if="productHasVariants(item)" v-tooltip="{ message: $tc('sw-product.list.variantIndicatorTooltip') }" class="sw-product-list__variant-indicator" size="x-small" @click="openVariantModal(item)">
+									<sw-icon name="regular-variants" size="14px"/>
+								</sw-button>
+							{% endblock %}
+
+							<!-- eslint-disable-next-line sw-deprecation-rules/no-twigjs-blocks -->
+							{% block sw_product_list_grid_columns_name_content_link %}
+								<router-link :to="{ name: 'sw.product.detail', params: { id: item.id } }">
+									{{ item.translated ? item.translated.name : item.name }}
+								</router-link>
+							{% endblock %}
+
+							<sw-label v-if="productIsDigital(item)" class="sw-product-list__digital-indicator">
+								{{ $tc('sw-product.variations.generatedListColumnContentProductState.is-download') }}
+							</sw-label>
+						</div>
+					{% endblock %}
+				</template>
+			{% endblock %}
+
+			<!-- eslint-disable-next-line sw-deprecation-rules/no-twigjs-blocks -->
+			{% block sw_product_list_grid_columns_active %}
+				{% parent %}
+			{% endblock %}
+
+			<!-- eslint-disable-next-line sw-deprecation-rules/no-twigjs-blocks -->
+			{% block sw_product_list_grid_columns_price %}
+				<template v-for="currency in currencies" #[`column-price-${currency.isocode}`]="{ item }">
+					{{ getCurrencyPriceByCurrencyId(currency.id, item.price).gross | currency(currency.isoCode) }}
+				</template>
+			{% endblock %}
+
+			<!-- eslint-disable-next-line sw-deprecation-rules/no-twigjs-blocks -->
+			{% block sw_product_list_grid_columns_stock %}
+				{% parent %}
+			{% endblock %}
+
+			<template #column-createdat="{ item }">
+				{{ item.createdAt|date }}
+			</template>
+
+			<template #column-updatedat="{ item }">
+				{{ item.updatedAt|date }}
+			</template>
+
+			<!-- eslint-disable-next-line sw-deprecation-rules/no-twigjs-blocks -->
+			{% block sw_product_list_grid_columns_actions %}
+				{% parent %}
+			{% endblock %}
+		{% endblock %}
+
+		<!-- eslint-disable-next-line sw-deprecation-rules/no-twigjs-blocks -->
+		{% block sw_product_list_bulk_edit_modal %}
+			{% parent %}
+		{% endblock %}
+	</sw-entity-listing>
+
+{% endblock %}

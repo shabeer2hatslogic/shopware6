@@ -1,0 +1,29 @@
+{
+  "name": "sineos/order-product-number",
+  "description": "SINEOS: Improved Shopware admin panel",
+  "type": "shopware-platform-plugin",
+  "license": "MIT",
+  "version": "1.0.1",
+  "autoload": {
+    "psr-4": {
+      "SineosOrderProductNumber\\": "src/"
+    }
+  },
+  "require": {
+    "shopware/core": "~6.6",
+    "shopware/storefront": "~6.6",
+    "shopware/administration": "~6.6"
+  },
+  "extra": {
+    "shopware-plugin-class": "SineosOrderProductNumber\\SineosOrderProductNumber",
+    "plugin-icon": "src/Resources/config/plugin.png",
+    "label": {
+      "de-DE": "SINEOS: Verbessertes Shopware Adminpanel",
+      "en-GB": "SINEOS: Improved Shopware admin panel"
+    },
+    "description": {
+      "de-DE": "Anzeige der Produktnummer auf den Seiten zum Erstellen und Bearbeiten von Bestellungen",
+      "en-GB": "Displaying Product Number on order create and edit pages"
+    }
+  }
+}
